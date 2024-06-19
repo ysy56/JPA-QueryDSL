@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: GreedyPeople
+  datasource:
+    url: jdbc:mysql://localhost:3306/greedypeople
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
