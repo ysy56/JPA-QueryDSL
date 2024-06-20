@@ -4,7 +4,7 @@ import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
 import com.sparta.greeypeople.user.entity.User;
-import com.sparta.greeypeople.user.enumeration.UserAuthority;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import com.sparta.greeypeople.exception.ConflictException;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setUserName(signupRequest.getUserName());
         user.setIntro(signupRequest.getIntro());
-        user.setUserAuthority((signupRequest.getAdmin() != null && signupRequest.getAdmin()) ? UserAuthority.ADMIN : UserAuthority.USER);
+        user.setUserAuth(signupRequest.getUserAuth().equals("admin") ? UserAuth.ADMIN : UserAuth.USER);
         userRepository.save(user);
     }
 

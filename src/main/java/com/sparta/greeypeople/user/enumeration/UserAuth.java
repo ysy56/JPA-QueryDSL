@@ -1,6 +1,6 @@
 package com.sparta.greeypeople.user.enumeration;
 
-public enum UserAuthority {
+public enum UserAuth {
     USER,
     ADMIN
 }

@@ -1,6 +1,6 @@
 package com.sparta.greeypeople.user.entity;
 
-import com.sparta.greeypeople.user.enumeration.UserAuthority;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserAuthority userAuthority;
+    private UserAuth userAuth;
 
     @Column(unique = true)
     private String refreshToken;

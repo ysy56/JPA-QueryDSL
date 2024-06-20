@@ -29,7 +29,8 @@ public class SignupRequestDto {
 
     private String intro;
 
-    @Builder.Default
-    private Boolean admin = false;
+    @Pattern(regexp = "^(user|admin)$", message = "유효한 사용자 권한을 입력해주세요. ('user' 또는 'admin')")
+    private String userAuth;
+
     private String adminToken;
 }
