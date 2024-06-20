@@ -17,8 +17,8 @@ public class AdminUserController {
 
     private final AdminUserService adminUserService;
 
-    public AdminUserController(UserService userService) {
-        this.userService = userService;
+    public AdminUserController(AdminUserService adminUserService) {
+        this.adminUserService = adminUserService;
     }
 
     /**
@@ -27,7 +27,7 @@ public class AdminUserController {
      */
     @PostMapping // @AuthenticationPrincipal UserDetails
     public ResponseEntity<DataCommonResponse<AdminUserResponseDto>> selectAllUser() {
-        AdminUserResponseDto responseDto = adminUserService.selectAllUser();
+        AdminUserResponseDto responseDto = adminUserService.getAllUsers();
         DataCommonResponse<AdminUserResponseDto> response = new DataCommonResponse<>(200, "전체 회원 조회 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
