@@ -45,4 +45,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    /**
+     * 클라이언트가 유효한 인증 제공을 하지 못한 경우
+     * @param ex : UnauthorizedException[custom]
+     * @return : error message, HttpStatus.UNAUTHORIZED => 401
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> unauthorizedException(UnauthorizedException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
 }
