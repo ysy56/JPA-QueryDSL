@@ -46,7 +46,7 @@ public class AdminUserController {
      * 특정 회원 삭제 ( 인가 필요 )
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
-    @PutMapping("/{userId}") // @AuthenticationPrincipal UserDetails
+    @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse<AdminUserResponseDto>> updateUserProfile(
             @PathVariable Long userId
     ) {
