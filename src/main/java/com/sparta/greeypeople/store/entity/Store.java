@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.store.entity;
 
 import com.sparta.greeypeople.store.dto.request.AdminStoreSaveRequestDto;
+import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,11 @@ public class Store {
     private String intro;
 
     public Store(AdminStoreSaveRequestDto requestDto) {
+        this.storeName = requestDto.getStoreName();
+        this.intro = requestDto.getIntro();
+    }
+
+    public void update(AdminStoreUpdateRequestDto requestDto) {
         this.storeName = requestDto.getStoreName();
         this.intro = requestDto.getIntro();
     }
