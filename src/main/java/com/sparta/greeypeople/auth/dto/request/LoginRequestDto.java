@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.auth.entity;
+package com.sparta.greeypeople.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginRequest {
+public class LoginRequestDto {
     @NotBlank(message = "사용자 ID를 입력해주세요")
     private String userId;
 

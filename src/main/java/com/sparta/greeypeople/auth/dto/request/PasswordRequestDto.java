@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.auth.dto;
+package com.sparta.greeypeople.auth.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor
-public class PasswordRequest {
+public class PasswordRequestDto {
 
     /**
      * 비밀번호

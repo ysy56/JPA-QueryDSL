@@ -1,7 +1,7 @@
 /*
 package com.sparta.greeypeople.user.controller;
 
-import com.sparta.greeypeople.auth.service.UserService;
+import com.sparta.greeypeople.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

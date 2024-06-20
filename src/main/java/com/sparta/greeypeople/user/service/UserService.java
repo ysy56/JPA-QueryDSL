@@ -1,8 +1,8 @@
-package com.sparta.greeypeople.auth.service;
+package com.sparta.greeypeople.user.service;
 
-import com.sparta.greeypeople.auth.dto.SignupRequestDto;
-import com.sparta.greeypeople.auth.dto.TokenResponseDto;
-import com.sparta.greeypeople.auth.entity.LoginRequest;
+import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 
 public interface UserService {
 
@@ -10,7 +10,7 @@ public interface UserService {
     void signup(SignupRequestDto signupRequest);
 
     // 사용자 로그인 처리 및 토큰 발급
-    TokenResponseDto login(LoginRequest loginRequest);
+    TokenResponseDto login(LoginRequestDto loginRequest);
 
     // 사용자 로그아웃 처리
     void logout(String userId);

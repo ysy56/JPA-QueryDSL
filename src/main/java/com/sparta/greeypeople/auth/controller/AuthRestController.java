@@ -1,11 +1,11 @@
 package com.sparta.greeypeople.auth.controller;
 
-import com.sparta.greeypeople.auth.dto.RefreshTokenRequestDto;
-import com.sparta.greeypeople.auth.dto.SignupRequestDto;
-import com.sparta.greeypeople.auth.dto.PasswordRequest;
-import com.sparta.greeypeople.auth.dto.TokenResponseDto;
-import com.sparta.greeypeople.auth.entity.LoginRequest;
-import com.sparta.greeypeople.auth.service.UserService;
+import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.auth.dto.request.PasswordRequestDto;
+import com.sparta.greeypeople.auth.dto.request.RefreshTokenRequestDto;
+import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
+import com.sparta.greeypeople.user.service.UserService;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,12 +51,12 @@ public class AuthRestController {
 
     /**
      * 로그인
-     * @param loginRequest 로그인 요청 DTO
+     * @param loginRequestDto 로그인 요청 DTO
      * @return 로그인 성공 메시지와 토큰 헤더
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
-        TokenResponseDto tokens = userService.login(loginRequest);
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        TokenResponseDto tokens = userService.login(loginRequestDto);
         String accessToken = tokens.getAccessToken();
         String refreshToken = tokens.getRefreshToken();
 
@@ -86,7 +86,7 @@ public class AuthRestController {
      * @return 회원탈퇴 성공 메시지
      */
     @PutMapping("/withdrawal")
-    public ResponseEntity<String> withdraw(@RequestHeader("Authorization") String token, @Valid @RequestBody PasswordRequest passwordRequest) {
+    public ResponseEntity<String> withdraw(@RequestHeader("Authorization") String token, @Valid @RequestBody PasswordRequestDto passwordRequest) {
         String userId = jwtUtil.getUsernameFromToken(token.substring(7));
         userService.withdraw(userId, passwordRequest.getPassword());
         return ResponseEntity.ok("회원탈퇴 성공");

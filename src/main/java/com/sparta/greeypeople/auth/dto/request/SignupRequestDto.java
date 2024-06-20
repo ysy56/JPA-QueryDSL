@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.auth.dto;
+package com.sparta.greeypeople.auth.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

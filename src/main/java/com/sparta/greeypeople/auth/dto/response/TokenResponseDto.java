@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.auth.dto;
+package com.sparta.greeypeople.auth.dto.response;
 
 
 import lombok.Getter;

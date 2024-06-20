@@ -1,5 +1,6 @@
-package com.sparta.greeypeople.auth.entity;
+package com.sparta.greeypeople.user.entity;
 
+import com.sparta.greeypeople.user.enumeration.UserAuthority;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

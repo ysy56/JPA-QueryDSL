@@ -1,11 +1,11 @@
-package com.sparta.greeypeople.auth.service;
+package com.sparta.greeypeople.user.service;
 
-import com.sparta.greeypeople.auth.dto.SignupRequestDto;
-import com.sparta.greeypeople.auth.dto.TokenResponseDto;
-import com.sparta.greeypeople.auth.entity.LoginRequest;
-import com.sparta.greeypeople.auth.entity.User;
-import com.sparta.greeypeople.auth.entity.UserAuthority;
-import com.sparta.greeypeople.auth.repository.UserRepository;
+import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
+import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.enumeration.UserAuthority;
+import com.sparta.greeypeople.user.repository.UserRepository;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import com.sparta.greeypeople.exception.ConflictException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
      * @return TokenResponseDto 액세스 및 리프레시 토큰을 포함한 응답 DTO
      */
     @Override
-    public TokenResponseDto login(LoginRequest loginRequest) {
+    public TokenResponseDto login(LoginRequestDto loginRequest) {
         User user = userRepository.findByUserId(loginRequest.getUserId())
                 .orElseThrow(() -> new DataNotFoundException("사용자를 찾을 수 없습니다."));
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {

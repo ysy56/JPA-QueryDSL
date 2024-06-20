@@ -1,7 +1,7 @@
-package com.sparta.greeypeople.auth.service;
+package com.sparta.greeypeople.user.service;
 
-import com.sparta.greeypeople.auth.entity.User;
-import com.sparta.greeypeople.auth.repository.UserRepository;
+import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
