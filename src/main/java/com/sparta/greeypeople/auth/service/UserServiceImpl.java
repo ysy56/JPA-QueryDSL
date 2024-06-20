@@ -3,7 +3,6 @@ package com.sparta.greeypeople.auth.service;
 import com.sparta.greeypeople.auth.dto.SignupRequestDto;
 import com.sparta.greeypeople.auth.dto.TokenResponseDto;
 import com.sparta.greeypeople.auth.entity.LoginRequest;
-import com.sparta.greeypeople.auth.entity.SignupRequest;
 import com.sparta.greeypeople.auth.entity.User;
 import com.sparta.greeypeople.auth.entity.UserAuthority;
 import com.sparta.greeypeople.auth.repository.UserRepository;
@@ -29,11 +28,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signup(SignupRequest signupRequest) {
-
-    }
-
-    @Override
     public void signup(SignupRequestDto signupRequest) {
         Optional<User> existingUser = userRepository.findByUserId(signupRequest.getUserId());
         if (existingUser.isPresent()) {
@@ -45,7 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setUserName(signupRequest.getUserName());
         user.setIntro(signupRequest.getIntro());
-        user.setUserAuthority(signupRequest.getAdmin() ? UserAuthority.ADMIN : UserAuthority.USER);
+        user.setUserAuthority((signupRequest.getAdmin() != null && signupRequest.getAdmin()) ? UserAuthority.ADMIN : UserAuthority.USER);
         userRepository.save(user);
     }
 

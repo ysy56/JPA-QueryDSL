@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignupRequest {
-    private String username;
+    private String userId;
     private String password;
-    private boolean isAdmin;
+    private String userName;
+    private String intro;
+    private Boolean admin;
     private String adminToken;
 }
