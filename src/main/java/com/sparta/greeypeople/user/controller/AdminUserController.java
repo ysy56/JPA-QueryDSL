@@ -31,7 +31,7 @@ public class AdminUserController {
      * 특정 회원 프로필 수정 ( 인가 필요 )
      * @return : 등록 된 특정 회원 정보
      */
-    @PutMapping("{userId}/profile") // @AuthenticationPrincipal UserDetails
+    @PutMapping("/{userId}/profile") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<DataCommonResponse<AdminUserResponseDto>> updateUserProfile(
             @PathVariable Long userId,
             @RequestBody AdminUserProfileRequestDto requestDto
