@@ -60,7 +60,7 @@ public class AdminUserController {
      * 회원 권한 변경 ( 인가 필요 )
      * @return : 권한 변경 완료 메시지 상태 코드 반환
      */
-    @DeleteMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
+    @PutMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse> updateUserAuth(
             @PathVariable Long userId,
             @RequestBody AdminUserAuthRequestDto requestDto
