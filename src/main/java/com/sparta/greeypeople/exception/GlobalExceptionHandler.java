@@ -34,5 +34,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * 이미 존재하는 값이 있는 경우
+     * @param ex : ConflictException[custom]
+     * @return : error message, HttpStatus.CONFLICT => 409
+     */
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<String> conflictException(ConflictException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
 
 }
