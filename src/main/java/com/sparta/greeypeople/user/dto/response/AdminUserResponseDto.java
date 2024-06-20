@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.user.dto;
+package com.sparta.greeypeople.user.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

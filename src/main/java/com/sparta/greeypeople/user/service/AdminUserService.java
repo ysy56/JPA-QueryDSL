@@ -1,9 +1,11 @@
 package com.sparta.greeypeople.user.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
-import com.sparta.greeypeople.user.dto.AdminUserProfileRequestDto;
-import com.sparta.greeypeople.user.dto.AdminUserResponseDto;
+import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
+import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,12 @@ public class AdminUserService {
         User user = findUser(userId);
 
         userRepository.delete(user);
+    }
+
+    public void updateUserAuth(Long userId, AdminUserAuthRequestDto requestDto) {
+        User user = findUser(userId);
+
+        user.updateAuth(requestDto);
     }
 
     public User findUser(Long userId) {

@@ -2,8 +2,9 @@ package com.sparta.greeypeople.user.controller;
 
 import com.sparta.greeypeople.common.DataCommonResponse;
 import com.sparta.greeypeople.common.StatusCommonResponse;
-import com.sparta.greeypeople.user.dto.AdminUserProfileRequestDto;
-import com.sparta.greeypeople.user.dto.AdminUserResponseDto;
+import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
+import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import com.sparta.greeypeople.user.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,20 @@ public class AdminUserController {
         adminUserService.deleteUser(userId);
         StatusCommonResponse response = new StatusCommonResponse(204, "회원 삭제 성공");
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * 회원 권한 변경 ( 인가 필요 )
+     * @return : 권한 변경 완료 메시지 상태 코드 반환
+     */
+    @DeleteMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
+    public ResponseEntity<StatusCommonResponse> updateUserAuth(
+            @PathVariable Long userId,
+            @RequestBody AdminUserAuthRequestDto requestDto
+    ) {
+        adminUserService.updateUserAuth(userId);
+        StatusCommonResponse response = new StatusCommonResponse(200, "회원 권한 변경 성공");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
