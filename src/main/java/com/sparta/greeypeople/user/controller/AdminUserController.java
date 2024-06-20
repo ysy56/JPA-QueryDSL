@@ -47,7 +47,7 @@ public class AdminUserController {
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
     @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<StatusCommonResponse<AdminUserResponseDto>> updateUserProfile(
+    public ResponseEntity<StatusCommonResponse> updateUserProfile(
             @PathVariable Long userId
     ) {
         adminUserService.deleteUser(userId);
