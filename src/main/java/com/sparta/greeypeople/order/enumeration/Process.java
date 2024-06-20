@@ -1,8 +1,8 @@
-package com.sparta.greeypeople.order.entity;
+package com.sparta.greeypeople.order.enumeration;
 
 public enum Process {
     COMPLETED("완료"),
-    CANCELED("관리자");
+    CANCELED("취소");
 
     private final String process;
 

@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.order.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
+import com.sparta.greeypeople.order.enumeration.Process;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.timestamp.TimeStamp;
 import jakarta.persistence.*;
