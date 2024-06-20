@@ -22,4 +22,15 @@ public class Menu {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "store_id", nullable = false)
 //    private Store store;
+
+    @Column
+    private Long menuLikes;
+
+    public void addLike() {
+        this.menuLikes = menuLikes + 1L;
+    }
+
+    public void minusLike() {
+        this.menuLikes = menuLikes - 1L;
+    }
 }
