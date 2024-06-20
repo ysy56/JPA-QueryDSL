@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 public class AdminUserAuthRequestDto {
 
     @NotBlank(message = "변경할 권한을 입력해주세요")
-    private String userAuthority;
+    private String userAuth;
 
 }
