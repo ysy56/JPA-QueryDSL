@@ -5,11 +5,9 @@ import com.sparta.greeypeople.timestamp.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "review")
 public class Review extends TimeStamp {
@@ -24,7 +22,7 @@ public class Review extends TimeStamp {
 //    @JoinColumn(name = "user_id", nullable = false)
 //    private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "store_id", nullable = false)
-//    private Store store;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 }
