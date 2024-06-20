@@ -90,4 +90,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * 중복된 좋아요&팔로우가 눌렸을 경우[unique 제약 조건 위배 에러]
+     * @param ex : ViolatedException[custom]
+     * @return : HttpStatus.CONFLICT => 409 : 클라이언트 요청에 대한 서버간 충돌
+     */
+    @ExceptionHandler(ViolatedException.class)
+    public ResponseEntity<String> violatedLikeException(ViolatedException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
 }
