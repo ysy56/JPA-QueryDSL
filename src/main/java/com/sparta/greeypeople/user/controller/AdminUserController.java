@@ -47,13 +47,12 @@ public class AdminUserController {
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
     @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<StatusCommonResponse> updateUserProfile(
+    public ResponseEntity<StatusCommonResponse> deleteUser(
             @PathVariable Long userId
     ) {
         adminUserService.deleteUser(userId);
         StatusCommonResponse response = new StatusCommonResponse(204, "회원 삭제 성공");
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
-
 
 }
