@@ -56,4 +56,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * 인증은 되었으나 접근 권한이 없는 경우
+     * @param ex : ForbiddenException[custom]
+     * @return : error message, HttpStatus.FORBIDDEN => 403
+     */
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<String> forbiddenException(ForbiddenException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
 }
