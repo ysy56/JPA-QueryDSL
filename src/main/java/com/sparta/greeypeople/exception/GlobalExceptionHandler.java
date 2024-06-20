@@ -23,4 +23,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * DB 조회 시 값이 존재하지 않는 경우
+     * @param ex : DataNotFoundException[custom]
+     * @return : error message, HttpStatus.NOT_FOUND => 404
+     */
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<String> dataNotFoundException(DataNotFoundException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
 }
