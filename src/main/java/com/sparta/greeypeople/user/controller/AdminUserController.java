@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.user.controller;
 
 import com.sparta.greeypeople.common.DataCommonResponse;
+import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.AdminUserResponseDto;
 import com.sparta.greeypeople.user.service.AdminUserService;
@@ -40,5 +41,19 @@ public class AdminUserController {
         DataCommonResponse<AdminUserResponseDto> response = new DataCommonResponse<>(200, "특정 회원 프로필 수정 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /**
+     * 특정 회원 삭제 ( 인가 필요 )
+     * @return : 삭제 완료 메시지 상태 코드 반환
+     */
+    @PutMapping("/{userId}") // @AuthenticationPrincipal UserDetails
+    public ResponseEntity<StatusCommonResponse<AdminUserResponseDto>> updateUserProfile(
+            @PathVariable Long userId
+    ) {
+        adminUserService.deleteUser(userId);
+        StatusCommonResponse response = new StatusCommonResponse(204, "회원 삭제 성공");
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
 
 }

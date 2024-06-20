@@ -24,12 +24,22 @@ public class AdminUserService {
 
     @Transactional
     public AdminUserResponseDto updateUserProfile(Long userId, AdminUserProfileRequestDto requestDto) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new DataNotFoundException("해당 사용자는 존재하지 않습니다.")
-        );
+        User user = findUser(userId);
 
         user.updateProfile(requestDto);
 
         return new AdminUserResponseDto(user);
+    }
+
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
+
+        userRepository.delete(user);
+    }
+
+    public User findUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("해당 사용자는 존재하지 않습니다.")
+        );
     }
 }
