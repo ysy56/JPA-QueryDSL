@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 
+/**
+ * 회원가입 요청 DTO
+ * 사용자 회원가입을 위한 데이터 전송 객체
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

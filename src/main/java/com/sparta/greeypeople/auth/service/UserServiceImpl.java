@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * 사용자 회원가입 처리
+     *
+     * @param signupRequest 회원가입 요청 DTO
+     */
     @Override
     public void signup(SignupRequestDto signupRequest) {
         Optional<User> existingUser = userRepository.findByUserId(signupRequest.getUserId());
@@ -43,6 +48,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * 사용자 로그인 처리 및 토큰 발급
+     *
+     * @param loginRequest 로그인 요청 DTO
+     * @return TokenResponseDto 액세스 및 리프레시 토큰을 포함한 응답 DTO
+     */
     @Override
     public TokenResponseDto login(LoginRequest loginRequest) {
         User user = userRepository.findByUserId(loginRequest.getUserId())
@@ -59,6 +70,11 @@ public class UserServiceImpl implements UserService {
         return new TokenResponseDto(accessToken, refreshToken);
     }
 
+    /**
+     * 사용자 로그아웃 처리
+     *
+     * @param userId 사용자 ID
+     */
     @Override
     public void logout(String userId) {
         User user = userRepository.findByUserId(userId)
@@ -67,6 +83,12 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * 사용자 회원탈퇴 처리
+     *
+     * @param userId 사용자 ID
+     * @param password 비밀번호
+     */
     @Override
     public void withdraw(String userId, String password) {
         User user = userRepository.findByUserId(userId)
@@ -78,6 +100,12 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
+    /**
+     * 리프레시 토큰을 사용하여 새로운 액세스 토큰 발급
+     *
+     * @param refreshToken 리프레시 토큰
+     * @return TokenResponseDto 새로운 액세스 및 리프레시 토큰을 포함한 응답 DTO
+     */
     @Override
     public TokenResponseDto refresh(String refreshToken) {
         return userRepository.findByUserId(jwtUtil.getUsernameFromToken(refreshToken))

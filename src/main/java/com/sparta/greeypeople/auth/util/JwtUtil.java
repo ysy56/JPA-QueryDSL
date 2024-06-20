@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.Base64;
 import java.util.Date;
 
-// JwtUtil: JWT 토큰을 생성하고 검증하는 유틸리티 클래스
+/**
+ * JwtUtil: JWT 토큰을 생성하고 검증하는 유틸리티 클래스
+ */
 @Component
 public class JwtUtil {
     private String secretKey;

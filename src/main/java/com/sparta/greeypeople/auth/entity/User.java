@@ -11,6 +11,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * 사용자 엔티티 클래스
+ * 데이터베이스의 사용자 정보를 나타내는 클래스
+ */
 @Entity
 @Getter
 @Setter
