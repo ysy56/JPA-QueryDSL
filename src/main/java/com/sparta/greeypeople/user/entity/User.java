@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.user.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
+import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -57,6 +58,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Menu> menu = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Review> comments = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
