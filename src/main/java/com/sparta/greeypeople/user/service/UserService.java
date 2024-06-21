@@ -1,7 +1,7 @@
 package com.sparta.greeypeople.user.service;
 
-import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
-import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 
 public interface UserService {

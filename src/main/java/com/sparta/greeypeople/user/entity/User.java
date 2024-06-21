@@ -4,7 +4,6 @@ import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,15 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * 사용자 엔티티 클래스
- * 데이터베이스의 사용자 정보를 나타내는 클래스
+ * 사용자 엔티티 클래스 데이터베이스의 사용자 정보를 나타내는 클래스
  */
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,6 +58,30 @@ public class User implements UserDetails {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public void setUserAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     @Override

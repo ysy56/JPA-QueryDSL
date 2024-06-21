@@ -1,9 +1,9 @@
 package com.sparta.greeypeople.auth.controller;
 
-import com.sparta.greeypeople.auth.dto.request.LoginRequestDto;
-import com.sparta.greeypeople.auth.dto.request.PasswordRequestDto;
+import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
 import com.sparta.greeypeople.auth.dto.request.RefreshTokenRequestDto;
-import com.sparta.greeypeople.auth.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 import com.sparta.greeypeople.user.service.UserService;
 import com.sparta.greeypeople.auth.util.JwtUtil;
