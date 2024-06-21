@@ -2,7 +2,7 @@ package com.sparta.greeypeople.user.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
-import com.sparta.greeypeople.timestamp.TimeStamp;
+import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 /**
  * 사용자 엔티티 클래스 데이터베이스의 사용자 정보를 나타내는 클래스
@@ -58,17 +57,17 @@ public class User extends TimeStamp {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Review> comments = new ArrayList<>();
 
-    public User(SignupRequestDto requestDto, UserStatus userStatus, UserAuth userAuth) {
+    public User(SignupRequestDto requestDto, UserStatus userStatus) {
         this.userId = requestDto.getUserId();
         this.password = requestDto.getPassword();
         this.userName = requestDto.getUserName();
         this.email = requestDto.getEmail();
         this.intro = requestDto.getIntro();
         this.userStatus = userStatus;
-        this.userAuth = userAuth;
+        this.userAuth = requestDto.getUserAuth();
     }
 
-    public void updateUserStatus(UserStatus userStatus, LocalDateTime statusAt) {
+    public void updateUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
     }
 
