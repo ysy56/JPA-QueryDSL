@@ -36,13 +36,13 @@ public class ReviewLikesService {
             throw new BadRequestException("자신이 등록한 리뷰에는 좋아요를 남길 수 없습니다.");
         }
 
-        var ReviewLikes = new ReviewLikes(foundUser, foundReview);
+        ReviewLikes reviewLikes  = new ReviewLikes(foundUser, foundReview);
 
         if (reviewLikesRepository.findByUserAndReview(foundUser, foundReview).isPresent()) {
             throw new ViolatedException("이미 좋아요를 누른 리뷰입니다.");
         }
 
-        reviewLikesRepository.save(ReviewLikes);
+        reviewLikesRepository.save(reviewLikes);
         foundReview.addLike();
     }
 

@@ -26,7 +26,6 @@ public class ReviewLikes extends TimeStamp {
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
-    @Builder
     public ReviewLikes(User user, Review review) {
         this.user = user;
         this.review = review;

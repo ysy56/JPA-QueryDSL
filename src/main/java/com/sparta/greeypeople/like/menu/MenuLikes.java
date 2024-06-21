@@ -26,7 +26,6 @@ public class MenuLikes extends TimeStamp {
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
 
-	@Builder
 	public MenuLikes(User user, Menu menu) {
 		this.user = user;
 		this.menu = menu;
