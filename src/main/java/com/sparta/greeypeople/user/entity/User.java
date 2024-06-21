@@ -1,7 +1,10 @@
 package com.sparta.greeypeople.user.entity;
 
+import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,6 +51,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Menu> menu = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
