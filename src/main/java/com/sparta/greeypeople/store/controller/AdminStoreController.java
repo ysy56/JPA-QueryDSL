@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.store.controller;
 
 import com.sparta.greeypeople.common.DataCommonResponse;
+import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.store.dto.request.AdminStoreSaveRequestDto;
 import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import com.sparta.greeypeople.store.dto.response.AdminStoreResponseDto;
@@ -34,6 +35,7 @@ public class AdminStoreController {
 
     /**
      * 가게 수정 기능 ( 인가 필요 )
+     * @param storeId : 수정할 가게의 id
      * @param requestDto : 수정할 가게의 정보
      * @return : 수정 된 가게의 정보
      */
@@ -44,7 +46,21 @@ public class AdminStoreController {
     ) {
         AdminStoreResponseDto responseDto = adminStoreService.updateStore(storeId, requestDto);
         DataCommonResponse<AdminStoreResponseDto> response = new DataCommonResponse<>(200, "가게 수정 성공", responseDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * 가게 삭제 기능 ( 인가 필요 )
+     * @param storeId : 삭제할 가게의 id
+     * @return : 삭제 완료 메시지 상태 코드 반환
+     */
+    @DeleteMapping("/stores/{storeId}") // @AuthenticationPrincipal UserDetails
+    public ResponseEntity<StatusCommonResponse<AdminStoreResponseDto>> deleteStore(
+            @PathVariable Long storeId
+    ) {
+        adminStoreService.deleteStore(storeId);
+        StatusCommonResponse response = new StatusCommonResponse(204, "가게 수정 성공");
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
 }

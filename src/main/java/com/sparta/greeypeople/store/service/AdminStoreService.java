@@ -31,9 +31,16 @@ public class AdminStoreService {
         return new AdminStoreResponseDto(store);
     }
 
+    public void deleteStore(Long storeId) {
+        Store store = findStore(storeId);
+
+        storeRepository.delete(store);
+    }
+
     public Store findStore(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(
                 () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
         );
     }
+
 }
