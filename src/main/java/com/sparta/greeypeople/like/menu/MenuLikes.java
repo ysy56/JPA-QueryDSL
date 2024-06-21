@@ -1,8 +1,9 @@
-package com.sparta.greeypeople.like.entity;
+package com.sparta.greeypeople.like.menu;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.timestamp.TimeStamp;
 
+import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

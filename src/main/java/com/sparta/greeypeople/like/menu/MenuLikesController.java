@@ -1,5 +1,6 @@
-package com.sparta.greeypeople.like.controller;
+package com.sparta.greeypeople.like.menu;
 
+import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -12,12 +13,11 @@ import com.sparta.greeypeople.exception.BadRequestException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ForbiddenException;
 import com.sparta.greeypeople.exception.ViolatedException;
-import com.sparta.greeypeople.like.service.MenuLikesService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/stores/{storeId}/menus")
-public class LikeController {
+public class MenuLikesController {
 
 	private final MenuLikesService menuLikesService;
 
