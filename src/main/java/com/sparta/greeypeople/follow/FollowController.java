@@ -1,8 +1,6 @@
 package com.sparta.greeypeople.follow;
 
 import com.sparta.greeypeople.common.DataCommonResponse;
-import com.sparta.greeypeople.exception.DataNotFoundException;
-import com.sparta.greeypeople.exception.ViolatedException;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import com.sparta.greeypeople.menu.entity.Menu;
@@ -21,24 +19,14 @@ public class FollowController {
 
     @PostMapping("/stores/{storeId}/follow")
     public ResponseEntity<StatusCommonResponse> followStore(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        try {
-            followService.followStore(storeId, userDetails.getUser());
-            return ResponseEntity.status(HttpStatus.CREATED).body(new StatusCommonResponse(201, "스토어 팔로우 성공"));
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusCommonResponse(404, e.getMessage()));
-        } catch (ViolatedException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new StatusCommonResponse(409, e.getMessage()));
-        }
+        followService.followStore(storeId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new StatusCommonResponse(201, "스토어 팔로우 성공"));
     }
 
     @DeleteMapping("/stores/{storeId}/follow")
     public ResponseEntity<StatusCommonResponse> unfollowStore(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        try {
-            followService.unfollowStore(storeId, userDetails.getUser());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new StatusCommonResponse(204, "스토어 언팔로우 성공"));
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusCommonResponse(404, e.getMessage()));
-        }
+        followService.unfollowStore(storeId, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new StatusCommonResponse(204, "스토어 언팔로우 성공"));
     }
 
     @GetMapping("/stores/follow/menus")
