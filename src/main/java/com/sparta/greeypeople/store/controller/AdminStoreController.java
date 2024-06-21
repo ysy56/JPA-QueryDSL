@@ -55,7 +55,7 @@ public class AdminStoreController {
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
     @DeleteMapping("/stores/{storeId}") // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<StatusCommonResponse<AdminStoreResponseDto>> deleteStore(
+    public ResponseEntity<StatusCommonResponse> deleteStore(
             @PathVariable Long storeId
     ) {
         adminStoreService.deleteStore(storeId);
