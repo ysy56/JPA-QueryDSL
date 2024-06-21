@@ -1,6 +1,5 @@
-package com.sparta.greeypeople.like.service;
+package com.sparta.greeypeople.like.menu;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,8 +7,6 @@ import com.sparta.greeypeople.exception.BadRequestException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ForbiddenException;
 import com.sparta.greeypeople.exception.ViolatedException;
-import com.sparta.greeypeople.like.entity.MenuLikes;
-import com.sparta.greeypeople.like.repository.MenuLikesRepository;
 import com.sparta.greeypeople.menu.entity.Menu;
 
 import lombok.RequiredArgsConstructor;
