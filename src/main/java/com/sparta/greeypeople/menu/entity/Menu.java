@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.menu.entity;
 
 import com.sparta.greeypeople.menu.dto.request.AdminMenuSaveRequestDto;
+import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
@@ -39,6 +40,11 @@ public class Menu {
         this.price = requestDto.getPrice();
         this.user = user;
         this.store = store;
+    }
+
+    public void update(AdminMenuUpdateRequestDto requestDto) {
+        this.menu = requestDto.getMenuName();
+        this.price = requestDto.getPrice();
     }
 
     public void addLike() {
