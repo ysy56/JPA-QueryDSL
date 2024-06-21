@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * UserDetailsService 구현체: 사용자 인증을 위한 서비스.
- * Spring Security에서 사용자의 인증 및 권한 부여를 처리
+ * UserDetailsService 구현체
+ * Spring Security에서 사용자의 인증 정보를 로드하는 서비스 클래스
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -36,10 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + userId);
         }
         User user = userOptional.get();
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUserId())
-                .password(user.getPassword())
-                .authorities(user.getAuthorities())
-                .build();
+        return new UserDetailsImpl(user);
     }
 }

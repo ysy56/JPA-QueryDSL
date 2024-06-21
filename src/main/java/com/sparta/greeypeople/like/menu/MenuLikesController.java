@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.like.menu;
 
+import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
