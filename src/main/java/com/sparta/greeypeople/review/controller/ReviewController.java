@@ -1,21 +1,19 @@
 package com.sparta.greeypeople.review.controller;
 
+import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.common.DataCommonResponse;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.review.dto.request.ReviewRequestDto;
 import com.sparta.greeypeople.review.dto.response.ReviewResponseDto;
 import com.sparta.greeypeople.review.service.ReviewService;
-import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
