@@ -2,7 +2,7 @@ package com.sparta.greeypeople.user.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
+import com.sparta.greeypeople.user.entity.User;
 
 @Getter
 @NoArgsConstructor
@@ -16,4 +16,5 @@ public class AdminUserResponseDto {
         this.userName = user.getUsername();
         this.intro = user.getIntro();
     }
+
 }
