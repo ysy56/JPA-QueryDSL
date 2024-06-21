@@ -1,41 +1,112 @@
-/*
 package com.sparta.greeypeople.user.controller;
 
-import com.sparta.greeypeople.user.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.greeypeople.common.StatusCommonResponse;
-import com.sparta.greeypeople.user.service.KakaoService;
+import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
+import com.sparta.greeypeople.auth.dto.request.RefreshTokenRequestDto;
+import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
+import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
+import com.sparta.greeypeople.user.service.UserService;
+import com.sparta.greeypeople.auth.util.JwtUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 
+/**
+ * 인증기능 컨트롤러
+ * - 회원가입
+ * - 로그인
+ * - 로그아웃
+ * - 회원탈퇴
+ * - 리프레시 토큰 재발급
+ */
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-	private final UserService userService;
-	private final KakaoService kakaoService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
+    /**
+     * 생성자
+     * @param userService 사용자 서비스
+     * @param jwtUtil JWT 유틸리티
+     */
+    public UserController(UserService userService, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
 
-	@GetMapping("/login/kakao")
-	public ResponseEntity<StatusCommonResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-		String token = kakaoService.kakaoLogin(code);  // JWT 반환
+    /**
+     * 회원가입
+     * @param signupRequestDto 회원가입 요청 DTO
+     * @return 회원가입 성공 메시지와 상태 코드
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<StatusCommonResponse> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+        userService.signup(signupRequestDto);
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.CREATED.value(), "회원가입 성공");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-		// JWT를 응답 헤더에 추가
-		Object JwtUtil;
-		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+    /**
+     * 로그인
+     * @param loginRequestDto 로그인 요청 DTO
+     * @return 로그인 성공 메시지와 토큰 헤더
+     */
+    @PostMapping("/login")
+    public ResponseEntity<StatusCommonResponse> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        TokenResponseDto tokens = userService.login(loginRequestDto);
+        String accessToken = tokens.getAccessToken();
+        String refreshToken = tokens.getRefreshToken();
 
-		// 클라이언트에게 성공적인 로그인 메시지 반환
-		StatusCommonResponse commonResponse = new StatusCommonResponse(200, "카카오 로그인 성공");
-		return ResponseEntity.ok().body(commonResponse);
-	}
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Refresh-Token", refreshToken);
 
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "로그인 성공");
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
+    }
+
+    /**
+     * 로그아웃
+     * @param token 인증 토큰
+     * @return 로그아웃 성공 메시지
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<StatusCommonResponse> logout(@RequestHeader("Authorization") String token) {
+        String userId = jwtUtil.getUsernameFromToken(token.substring(7));
+        userService.logout(userId);
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "로그아웃 성공");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 회원탈퇴
+     * @param token 인증 토큰
+     * @param passwordRequest 비밀번호 요청 DTO
+     * @return 회원탈퇴 성공 메시지
+     */
+    @PutMapping("/withdrawal")
+    public ResponseEntity<StatusCommonResponse> withdraw(@RequestHeader("Authorization") String token, @Valid @RequestBody PasswordRequestDto passwordRequest) {
+        String userId = jwtUtil.getUsernameFromToken(token.substring(7));
+        userService.withdraw(userId, passwordRequest.getPassword());
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "회원탈퇴 성공");
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 리프레시 토큰 재발급
+     * @param refreshTokenRequestDto 리프레시 토큰 요청 DTO
+     * @return 새로운 액세스 토큰과 리프레시 토큰
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponseDto> refresh(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
+        String refreshToken = refreshTokenRequestDto.getRefreshToken();
+        String newAccessToken = jwtUtil.refreshToken(refreshToken);
+        TokenResponseDto tokenResponseDto = new TokenResponseDto(newAccessToken, refreshToken);
+        return ResponseEntity.ok(tokenResponseDto);
+    }
 }
-
- */
