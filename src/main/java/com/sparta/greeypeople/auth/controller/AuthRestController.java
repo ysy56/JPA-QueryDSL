@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.auth.controller;
 
+import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
 import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
 import com.sparta.greeypeople.auth.dto.request.RefreshTokenRequestDto;
@@ -44,9 +45,10 @@ public class AuthRestController {
      * @return 회원가입 성공 메시지와 상태 코드
      */
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<StatusCommonResponse> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공");
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.CREATED.value(), "회원가입 성공");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
@@ -55,7 +57,7 @@ public class AuthRestController {
      * @return 로그인 성공 메시지와 토큰 헤더
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<StatusCommonResponse> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         TokenResponseDto tokens = userService.login(loginRequestDto);
         String accessToken = tokens.getAccessToken();
         String refreshToken = tokens.getRefreshToken();
@@ -64,7 +66,8 @@ public class AuthRestController {
         headers.set("Authorization", "Bearer " + accessToken);
         headers.set("Refresh-Token", refreshToken);
 
-        return new ResponseEntity<>("로그인 성공", headers, HttpStatus.OK);
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "로그인 성공");
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
 
     /**
@@ -73,10 +76,11 @@ public class AuthRestController {
      * @return 로그아웃 성공 메시지
      */
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<StatusCommonResponse> logout(@RequestHeader("Authorization") String token) {
         String userId = jwtUtil.getUsernameFromToken(token.substring(7));
         userService.logout(userId);
-        return ResponseEntity.ok("로그아웃 성공");
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "로그아웃 성공");
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -86,10 +90,11 @@ public class AuthRestController {
      * @return 회원탈퇴 성공 메시지
      */
     @PutMapping("/withdrawal")
-    public ResponseEntity<String> withdraw(@RequestHeader("Authorization") String token, @Valid @RequestBody PasswordRequestDto passwordRequest) {
+    public ResponseEntity<StatusCommonResponse> withdraw(@RequestHeader("Authorization") String token, @Valid @RequestBody PasswordRequestDto passwordRequest) {
         String userId = jwtUtil.getUsernameFromToken(token.substring(7));
         userService.withdraw(userId, passwordRequest.getPassword());
-        return ResponseEntity.ok("회원탈퇴 성공");
+        StatusCommonResponse response = new StatusCommonResponse(HttpStatus.OK.value(), "회원탈퇴 성공");
+        return ResponseEntity.ok(response);
     }
 
     /**
