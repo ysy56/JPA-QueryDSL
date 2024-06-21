@@ -1,7 +1,7 @@
 package com.sparta.greeypeople.follow;
 
 import com.sparta.greeypeople.store.entity.Store;
-import com.sparta.greeypeople.timestamp.TimeStamp;
+import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
