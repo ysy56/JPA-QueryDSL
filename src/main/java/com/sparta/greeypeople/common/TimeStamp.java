@@ -1,8 +1,9 @@
-package com.sparta.greeypeople.timestamp;
+package com.sparta.greeypeople.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
@@ -25,4 +26,11 @@ public abstract class TimeStamp {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (modifiedAt == null) {
+            modifiedAt = createdAt;
+        }
+    }
 }
