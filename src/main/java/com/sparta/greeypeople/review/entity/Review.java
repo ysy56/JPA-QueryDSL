@@ -33,4 +33,8 @@ public class Review extends TimeStamp {
         this.store = store;
         this.user = user;
     }
+
+    public void update(ReviewRequestDto reviewRequestDto) {
+        this.content = reviewRequestDto.getContent();
+    }
 }
