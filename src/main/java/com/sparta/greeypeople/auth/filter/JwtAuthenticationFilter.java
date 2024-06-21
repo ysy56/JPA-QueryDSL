@@ -1,6 +1,6 @@
 package com.sparta.greeypeople.auth.filter;
 
-import com.sparta.greeypeople.user.service.UserDetailsServiceImpl;
+import com.sparta.greeypeople.auth.security.UserDetailsServiceImpl;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

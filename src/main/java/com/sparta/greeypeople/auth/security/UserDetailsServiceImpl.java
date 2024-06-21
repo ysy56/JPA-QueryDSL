@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.user.service;
+package com.sparta.greeypeople.auth.security;
 
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;

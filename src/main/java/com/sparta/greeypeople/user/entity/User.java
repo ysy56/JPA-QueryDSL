@@ -8,12 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * 사용자 엔티티 클래스 데이터베이스의 사용자 정보를 나타내는 클래스
@@ -22,7 +17,7 @@ import java.util.Collections;
 @Getter
 @NoArgsConstructor
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +68,15 @@ public class User implements UserDetails {
         updatedAt = LocalDateTime.now();
     }
 
+    public User(String userId, String password, String userName, String email, UserAuth userAuth) {
+        this.userId = userId;
+        this.password = password;
+        this.userName = userName;
+        this.email = email;
+        this.userAuth = userAuth;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
     public void updateUserId(String userId) {
         this.userId = userId;
@@ -100,35 +104,5 @@ public class User implements UserDetails {
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public String getUsername() {
-        return this.userId;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 }
