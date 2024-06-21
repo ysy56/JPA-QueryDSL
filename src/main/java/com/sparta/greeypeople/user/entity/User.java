@@ -2,6 +2,8 @@ package com.sparta.greeypeople.user.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
+import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -130,5 +132,14 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public void updateProfile(AdminUserProfileRequestDto requestDto) {
+        this.userName = requestDto.getUserName();
+        this.intro = requestDto.getIntro();
+    }
+
+    public void updateAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 }
