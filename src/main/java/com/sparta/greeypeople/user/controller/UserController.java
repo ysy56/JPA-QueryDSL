@@ -1,5 +1,7 @@
+/*
 package com.sparta.greeypeople.user.controller;
 
+import com.sparta.greeypeople.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ public class UserController {
 		String token = kakaoService.kakaoLogin(code);  // JWT 반환
 
 		// JWT를 응답 헤더에 추가
+		Object JwtUtil;
 		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
 		// 클라이언트에게 성공적인 로그인 메시지 반환
@@ -34,3 +37,5 @@ public class UserController {
 	}
 
 }
+
+ */

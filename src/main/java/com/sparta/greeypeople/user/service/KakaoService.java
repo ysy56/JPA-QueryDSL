@@ -1,8 +1,12 @@
+/*
 package com.sparta.greeypeople.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.greeypeople.auth.entity.User;
+import com.sparta.greeypeople.auth.repository.UserRepository;
+import com.sparta.greeypeople.auth.util.JwtUtil;
 import com.sparta.greeypeople.user.dto.KakaoUserInfoDto;
 
 import lombok.RequiredArgsConstructor;
@@ -160,3 +164,5 @@ public class KakaoService {
 		return kakaoUser;
 	}
 }
+
+ */
