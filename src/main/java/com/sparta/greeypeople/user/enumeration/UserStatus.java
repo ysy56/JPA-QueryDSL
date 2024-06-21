@@ -1,12 +1,13 @@
 package com.sparta.greeypeople.user.enumeration;
 
-public enum UserAuth {
-    USER("USER"),
-    ADMIN("ADMIN");
+public enum UserStatus {
+
+    MEMBER("MEMBER"),
+    NON_MEMBER("NON_MEMBER");
 
     private final String status;
 
-    UserAuth(String status) {
+    UserStatus(String status) {
         this.status = status;
     }
 

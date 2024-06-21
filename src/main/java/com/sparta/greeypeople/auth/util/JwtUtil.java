@@ -1,90 +1,139 @@
 package com.sparta.greeypeople.auth.util;
 
+import com.sparta.greeypeople.auth.config.JwtConfig;
+import com.sparta.greeypeople.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
+import java.security.Key;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
 import java.util.Date;
+import org.springframework.util.StringUtils;
 
 /**
  * JwtUtil: JWT 토큰을 생성하고 검증하는 유틸리티 클래스
  */
 @Component
 public class JwtUtil {
-    private String secretKey;
-
-    @Value("${jwt.secret.key}")
-    public void setSecretKey(String secretKey) {
-        this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
 
     @Value("${jwt.token.expiration}")
-    private long tokenExpiration;
+    private long ACCESS_TOKEN_TIME;
 
     @Value("${jwt.refresh.token.expiration}")
-    private long refreshTokenExpiration;
+    private long REFRESH_TOKEN_TIME;
 
-    // 액세스 토큰 생성
-    public String createAccessToken(String userId) {
-        return generateToken(userId, tokenExpiration);
+    public static final String BEARER_PREFIX = "Bearer ";
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+    private final JwtConfig jwtConfig;
+    private final Key key;
+
+    public JwtUtil(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+        this.key = jwtConfig.getKey();
     }
 
-    // 리프레시 토큰 생성
-    public String createRefreshToken(String userId) {
-        return generateToken(userId, refreshTokenExpiration);
-    }
+    public String generateToken(String userId, String userName, long tokenTime) {
 
-    // JWT 토큰 생성
-    private String generateToken(String userId, long expiration) {
+        Date date = new Date();
+
         return Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+            .setSubject(userId)
+            .claim("userName", userName)
+            .setExpiration(new Date(date.getTime() + tokenTime))
+            .setIssuedAt(date)
+            .signWith(key, signatureAlgorithm)
+            .compact();
     }
 
-    // JWT 토큰에서 정보 추출
-    public Claims extractClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
+    public String generateAccessToken(String userId, String userName) {
+        return generateToken(userId, userName, ACCESS_TOKEN_TIME);
     }
 
-    // 토큰 유효성 검증
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public String generateRefreshToken(String userId, String userName) {
+        return generateToken(userId, userName, REFRESH_TOKEN_TIME);
     }
 
-    // 토큰 만료 여부 확인
-    private boolean isTokenExpired(String token) {
-        final Date expiration = extractClaims(token).getExpiration();
-        return expiration.before(new Date());
+    public String generateNewRefreshToken(String userId, String userName, Date expirationDate) {
+
+        Date date = new Date();
+
+        return Jwts.builder()
+            .setSubject(userId)
+            .claim("userName", userName)
+            .setExpiration(expirationDate)
+            .setIssuedAt(date)
+            .signWith(key, signatureAlgorithm)
+            .compact();
     }
 
-    // 토큰으로부터 사용자 아이디 추출
-    public String getUsernameFromToken(String token) {
-        return extractClaims(token).getSubject();
+    public ResponseCookie generateRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
+            .httpOnly(true)
+            .maxAge(REFRESH_TOKEN_TIME / 1000)
+            .path("/")
+            .sameSite("Strict")
+            .build();
     }
 
-    // 리프레시 토큰으로 새 엑세스 토큰 재발급
-    public String refreshToken(String refreshToken) {
-        if (validateRefreshToken(refreshToken)) {
-            String username = getUsernameFromToken(refreshToken);
-            return createAccessToken(username);
-        } else {
-            throw new IllegalArgumentException("리프레시 토큰이 유효하지 않습니다.");
+    public ResponseCookie generateNewRefreshTokenCookie(String refreshToken, Date expirationDate) {
+
+        long maxAge = (expirationDate.getTime() - new Date().getTime()) / 1000;
+
+        return ResponseCookie.from("refreshToken", refreshToken)
+            .httpOnly(true)
+            .maxAge(maxAge)
+            .path("/")
+            .sameSite("Strict")
+            .build();
+    }
+
+    public String getAccessTokenFromHeader(HttpServletRequest request) {
+
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(BEARER_PREFIX)) {
+            return authorizationHeader.substring(7);
+        }
+
+        return null;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    // 리프레시 토큰의 유효성 검증
-    public boolean validateRefreshToken(String token) {
-        return !isTokenExpired(token);
+    public void checkTokenExpiration(String token) throws TokenExpiredException {
+
+        try {
+
+            Claims claims = getClaimsFromToken(token);
+            Date date = claims.getExpiration();
+            Date now = new Date();
+
+            if (date != null && date.before(now)) {
+                throw new TokenExpiredException("토큰이 만료되었습니다.");
+            }
+
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException("토큰이 만료되었습니다.");
+        }
+
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 }

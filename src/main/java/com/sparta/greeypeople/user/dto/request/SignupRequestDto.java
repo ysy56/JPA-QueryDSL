@@ -13,7 +13,6 @@ import lombok.Builder;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SignupRequestDto {
 
     @NotBlank(message = "사용자 ID를 입력해주세요")
@@ -33,7 +32,7 @@ public class SignupRequestDto {
 
     private String intro;
 
-    @Pattern(regexp = "^(user|admin)$", message = "유효한 사용자 권한을 입력해주세요. ('user' 또는 'admin')")
+    @Pattern(regexp = "^(USER|ADMIN)$", message = "유효한 사용자 권한을 입력해주세요. ('user' 또는 'admin')")
     private String userAuth;
 
     private String adminToken;
