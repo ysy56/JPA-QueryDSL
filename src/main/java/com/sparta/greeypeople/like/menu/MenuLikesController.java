@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.like.menu;
 
+import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import com.sparta.greeypeople.exception.BadRequestException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ForbiddenException;
 import com.sparta.greeypeople.exception.ViolatedException;
+import com.sparta.greeypeople.user.service.UserDetailsImpl;
+
 
 @RestController
 @RequiredArgsConstructor
