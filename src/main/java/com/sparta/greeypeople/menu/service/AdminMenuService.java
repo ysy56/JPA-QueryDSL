@@ -47,6 +47,13 @@ public class AdminMenuService {
         return new AdminMenuResponseDto(menu);
     }
 
+    public void deleteMenu(Long storeId, Long menuId) {
+        Store store = findStore(storeId);
+        Menu menu = findMenu(menuId);
+
+        menuRepository.delete(menu);
+    }
+
     public User findUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
@@ -68,4 +75,5 @@ public class AdminMenuService {
             () -> new DataNotFoundException("해당 메뉴는 존재하지 않습니다.")
         );
     }
+
 }
