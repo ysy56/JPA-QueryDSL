@@ -27,6 +27,10 @@ public class SignupRequestDto {
     @NotBlank(message = "사용자 이름을 입력해주세요")
     private String userName;
 
+    @NotBlank(message = "이메일을 입력해주세요")
+    @Email(message = "이메일 형식으로 입력해주세요.")
+    private String email;
+
     private String intro;
 
     @Pattern(regexp = "^(user|admin)$", message = "유효한 사용자 권한을 입력해주세요. ('user' 또는 'admin')")

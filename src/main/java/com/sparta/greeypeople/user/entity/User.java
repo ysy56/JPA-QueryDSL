@@ -33,6 +33,9 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 50)
     private String userName;
 
+    @Column(nullable = false, unique = true, length = 50)
+    private String email;
+
     @Column(length = 100)
     private String intro;
 
@@ -60,27 +63,32 @@ public class User implements UserDetails {
         updatedAt = LocalDateTime.now();
     }
 
-    public void setUserId(String userId) {
+
+    public void updateUserId(String userId) {
         this.userId = userId;
     }
 
-    public void setPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
     }
 
-    public void setUserName(String userName) {
+    public void updateUserName(String userName) {
         this.userName = userName;
     }
 
-    public void setIntro(String intro) {
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updateIntro(String intro) {
         this.intro = intro;
     }
 
-    public void setUserAuth(UserAuth userAuth) {
+    public void updateUserAuth(UserAuth userAuth) {
         this.userAuth = userAuth;
     }
 
-    public void setRefreshToken(String refreshToken) {
+    public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
