@@ -6,10 +6,8 @@ import com.sparta.greeypeople.exception.BadRequestException;
 import com.sparta.greeypeople.exception.ConflictException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.UnauthorizedException;
-import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
 import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
-import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
@@ -17,7 +15,6 @@ import com.sparta.greeypeople.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -60,7 +57,7 @@ public class UserService {
             userAuth = UserAuth.ADMIN;
         }
 
-        UserStatus userStatus = UserStatus.MEMBER;
+        UserStatus userStatus = UserStatus.ACTIVE;
         User user = new User(requestDto, userStatus, userAuth);
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
@@ -93,11 +90,11 @@ public class UserService {
             throw new BadRequestException("비밀번호를 확인해주세요.");
         }
 
-        if (user.getUserStatus() == UserStatus.NON_MEMBER) {
+        if (user.getUserStatus() == UserStatus.WITHDRAWN) {
             throw new ConflictException("이미 탈퇴한 회원입니다.");
         }
 
-        UserStatus userStatus = UserStatus.NON_MEMBER;
+        UserStatus userStatus = UserStatus.WITHDRAWN;
 
         user.updateUserStatus(userStatus);
 
