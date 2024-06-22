@@ -28,6 +28,17 @@ public class Review extends TimeStamp {
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
+    @Column
+    private Long reviewLikes;
+
+    public void addLike() {
+        this.reviewLikes = reviewLikes + 1L;
+    }
+
+    public void minusLike() {
+        this.reviewLikes = reviewLikes - 1L;
+    }
+
     public Review(ReviewRequestDto reviewRequestDto, Store store, User user) {
         this.content = reviewRequestDto.getContent();
         this.store = store;
