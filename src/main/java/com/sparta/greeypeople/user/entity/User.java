@@ -3,6 +3,7 @@ package com.sparta.greeypeople.user.entity;
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
+import com.sparta.greeypeople.user.enumeration.UserStatus;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserAuth userAuth;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 
     @Column(unique = true)
     private String refreshToken;
