@@ -11,6 +11,7 @@ import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.auth.dto.response.TokenResponseDto;
 import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -18,6 +19,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,11 +30,16 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    @Value("${admin.token}")
+    private String ADMIN_TOKEN;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+        JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -41,12 +48,20 @@ public class UserService {
     @Transactional
     public void signup(SignupRequestDto requestDto) {
 
-        findByUserId(requestDto.getUserId()).ifPresent( (el) -> {
+        findByUserId(requestDto.getUserId()).ifPresent((el) -> {
             throw new ConflictException("이미 사용 중인 아이디입니다.");
         });
 
+        UserAuth userAuth = UserAuth.USER;
+        if (!requestDto.getAdminToken().isEmpty()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+            }
+            userAuth = UserAuth.ADMIN;
+        }
+
         UserStatus userStatus = UserStatus.MEMBER;
-        User user = new User(requestDto, userStatus);
+        User user = new User(requestDto, userStatus, userAuth);
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         user.encryptionPassword(encodedPassword);
@@ -57,8 +72,10 @@ public class UserService {
     @Transactional
     public void logout() {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = findByUserId(userDetails.getUsername()).orElseThrow( () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        User user = findByUserId(userDetails.getUsername()).orElseThrow(
+            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         user.updateRefreshToken(null);
 
@@ -67,8 +84,10 @@ public class UserService {
     @Transactional
     public void withdrawal(PasswordRequestDto requestDto) {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = findByUserId(userDetails.getUsername()).orElseThrow( () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        User user = findByUserId(userDetails.getUsername()).orElseThrow(
+            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         if (!checkPassword(requestDto.getPassword(), user.getPassword())) {
             throw new BadRequestException("비밀번호를 확인해주세요.");
@@ -111,15 +130,18 @@ public class UserService {
         }
 
         Claims info = jwtUtil.getClaimsFromToken(tokenValue);
-        User user = findByUserId(info.getSubject()).orElseThrow( () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        User user = findByUserId(info.getSubject()).orElseThrow(
+            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         if (!user.getRefreshToken().equals(tokenValue)) {
             throw new UnauthorizedException("토큰 검증 실패");
         }
 
-        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), user.getUserName());
-        String refreshToken = jwtUtil.generateNewRefreshToken(user.getUserId(), user.getUserName(), info.getExpiration());
-        ResponseCookie responseCookie = jwtUtil.generateNewRefreshTokenCookie(refreshToken, info.getExpiration());
+        String accessToken = jwtUtil.generateAccessToken(user.getUserId(), user.getUserName(), user.getUserAuth());
+        String refreshToken = jwtUtil.generateNewRefreshToken(user.getUserId(), user.getUserName(), user.getUserAuth(),
+            info.getExpiration());
+        ResponseCookie responseCookie = jwtUtil.generateNewRefreshTokenCookie(refreshToken,
+            info.getExpiration());
 
         user.updateRefreshToken(refreshToken);
 

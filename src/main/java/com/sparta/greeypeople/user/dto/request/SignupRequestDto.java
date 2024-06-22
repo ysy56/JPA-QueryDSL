@@ -33,8 +33,5 @@ public class SignupRequestDto {
 
     private String intro;
 
-    @NotBlank(message = "유효한 사용자 권한을 입력해주세요. ('USER' 또는 'ADMIN')")
-    private UserAuth userAuth;
-
     private String adminToken;
 }

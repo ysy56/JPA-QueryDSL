@@ -2,15 +2,18 @@ package com.sparta.greeypeople.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.greeypeople.auth.security.UserDetailsImpl;
-import com.sparta.greeypeople.auth.security.UserDetailsServiceImpl;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
+import com.sparta.greeypeople.user.enumeration.UserStatus;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -18,16 +21,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-import com.sparta.greeypeople.user.entity.User;
-import com.sparta.greeypeople.user.enumeration.UserStatus;
-
-import java.io.IOException;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -41,7 +35,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+        HttpServletResponse response) throws AuthenticationException {
 
         if (!request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("잘못된 http 요청입니다.");
@@ -49,9 +44,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try {
 
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                LoginRequestDto.class);
 
-            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(requestDto.getUserId(), requestDto.getPassword(), null));
+            return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                    requestDto.getPassword(), null));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -59,10 +57,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, FilterChain chain, Authentication authResult)
+        throws IOException, ServletException {
 
         String userId = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         String userName = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserName();
+        UserAuth userAuth = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserAuth();
 
         Optional<User> user = userRepository.findByUserId(userId);
 
@@ -75,8 +76,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return;
         }
 
-        String accessToken = jwtUtil.generateAccessToken(userId, userName);
-        String refreshToken = jwtUtil.generateRefreshToken(userId, userName);
+        String accessToken = jwtUtil.generateAccessToken(userId, userName, userAuth);
+        String refreshToken = jwtUtil.generateRefreshToken(userId, userName, userAuth);
         ResponseCookie refreshTokenCookie = jwtUtil.generateRefreshTokenCookie(refreshToken);
 
         user.get().updateRefreshToken(refreshToken);
@@ -93,7 +94,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, AuthenticationException failed)
+        throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         response.setContentType("text/plain;charset=UTF-8");
         response.getWriter().write("아이디, 비밀번호를 확인해주세요.");

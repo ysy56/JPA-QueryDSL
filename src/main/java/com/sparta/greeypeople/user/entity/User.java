@@ -57,14 +57,14 @@ public class User extends TimeStamp {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Review> comments = new ArrayList<>();
 
-    public User(SignupRequestDto requestDto, UserStatus userStatus) {
+    public User(SignupRequestDto requestDto, UserStatus userStatus, UserAuth userAuth) {
         this.userId = requestDto.getUserId();
         this.password = requestDto.getPassword();
         this.userName = requestDto.getUserName();
         this.email = requestDto.getEmail();
         this.intro = requestDto.getIntro();
         this.userStatus = userStatus;
-        this.userAuth = requestDto.getUserAuth();
+        this.userAuth = userAuth;
     }
 
     public void updateUserStatus(UserStatus userStatus) {

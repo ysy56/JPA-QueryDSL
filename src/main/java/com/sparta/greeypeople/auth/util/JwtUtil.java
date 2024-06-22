@@ -2,6 +2,7 @@ package com.sparta.greeypeople.auth.util;
 
 import com.sparta.greeypeople.auth.config.JwtConfig;
 import com.sparta.greeypeople.exception.TokenExpiredException;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -30,6 +31,7 @@ public class JwtUtil {
     private long REFRESH_TOKEN_TIME;
 
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String AUTHORIZATION_KEY = "auth";
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     private final JwtConfig jwtConfig;
     private final Key key;
@@ -39,34 +41,36 @@ public class JwtUtil {
         this.key = jwtConfig.getKey();
     }
 
-    public String generateToken(String userId, String userName, long tokenTime) {
+    public String generateToken(String userId, String userName, UserAuth userAuth, long tokenTime) {
 
         Date date = new Date();
 
         return Jwts.builder()
             .setSubject(userId)
             .claim("userName", userName)
+            .claim(AUTHORIZATION_KEY, userAuth.toString())
             .setExpiration(new Date(date.getTime() + tokenTime))
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)
             .compact();
     }
 
-    public String generateAccessToken(String userId, String userName) {
-        return generateToken(userId, userName, ACCESS_TOKEN_TIME);
+    public String generateAccessToken(String userId, String userName, UserAuth userAuth) {
+        return generateToken(userId, userName, userAuth, ACCESS_TOKEN_TIME);
     }
 
-    public String generateRefreshToken(String userId, String userName) {
-        return generateToken(userId, userName, REFRESH_TOKEN_TIME);
+    public String generateRefreshToken(String userId, String userName, UserAuth userAuth) {
+        return generateToken(userId, userName, userAuth, REFRESH_TOKEN_TIME);
     }
 
-    public String generateNewRefreshToken(String userId, String userName, Date expirationDate) {
+    public String generateNewRefreshToken(String userId, String userName, UserAuth userAuth, Date expirationDate) {
 
         Date date = new Date();
 
         return Jwts.builder()
             .setSubject(userId)
             .claim("userName", userName)
+            .claim(AUTHORIZATION_KEY, userAuth.toString())
             .setExpiration(expirationDate)
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)

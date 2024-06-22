@@ -10,4 +10,9 @@ public enum UserAuth {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return this.status;
+    }
+
 }
