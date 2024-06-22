@@ -56,7 +56,7 @@ public class FollowService {
         // 각 가게별 메뉴 조회 및 최신순 정렬
         List<Menu> menus = new ArrayList<>();
         for (Store store : followedStores) {
-            List<Menu> storeMenus = storeRepository.findMenusByStoreIdOrderByCreatedAtDesc(store.getId());
+            List<Menu> storeMenus = storeRepository.findMenusByIdOrderByCreatedAtDesc(store.getId());
             menus.addAll(storeMenus);
         }
 

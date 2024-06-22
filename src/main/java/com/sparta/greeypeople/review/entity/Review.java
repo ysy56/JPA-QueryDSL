@@ -2,7 +2,7 @@ package com.sparta.greeypeople.review.entity;
 
 import com.sparta.greeypeople.review.dto.request.ReviewRequestDto;
 import com.sparta.greeypeople.store.entity.Store;
-import com.sparta.greeypeople.timestamp.TimeStamp;
+import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,6 +27,17 @@ public class Review extends TimeStamp {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+    @Column
+    private Long reviewLikes;
+
+    public void addLike() {
+        this.reviewLikes = reviewLikes + 1L;
+    }
+
+    public void minusLike() {
+        this.reviewLikes = reviewLikes - 1L;
+    }
 
     public Review(ReviewRequestDto reviewRequestDto, Store store, User user) {
         this.content = reviewRequestDto.getContent();
