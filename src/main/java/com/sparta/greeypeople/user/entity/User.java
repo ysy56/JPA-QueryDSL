@@ -42,10 +42,6 @@ public class User extends TimeStamp {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private UserAuth userAuth;
 
     @Column(nullable = false)

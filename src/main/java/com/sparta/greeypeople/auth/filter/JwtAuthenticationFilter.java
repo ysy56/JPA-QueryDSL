@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Optional<User> user = userRepository.findByUserId(userId);
 
-        if (user.isEmpty() || user.get().getUserStatus().equals(UserStatus.NON_MEMBER)) {
+        if (user.isEmpty() || user.get().getUserStatus().equals(UserStatus.WITHDRAWN)) {
 
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setContentType("text/plain;charset=UTF-8");
