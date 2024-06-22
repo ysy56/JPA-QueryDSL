@@ -1,14 +1,19 @@
 package com.sparta.greeypeople.user.enumeration;
 
 public enum UserStatus {
-
-    MEMBER("MEMBER"),
-    NON_MEMBER("NON_MEMBER");
+    ACTIVE("ACTIVE"),  //정상
+    WITHDRAWN("WITHDRAWN"),  //탈퇴
+    BLOCKED("BLOCKED")  //차단
+}
 
     private final String status;
 
     UserStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
 }

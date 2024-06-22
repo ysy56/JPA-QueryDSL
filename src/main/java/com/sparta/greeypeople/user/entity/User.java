@@ -48,6 +48,10 @@ public class User extends TimeStamp {
     @Enumerated(EnumType.STRING)
     private UserAuth userAuth;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
     @Column(unique = true)
     private String refreshToken;
 
