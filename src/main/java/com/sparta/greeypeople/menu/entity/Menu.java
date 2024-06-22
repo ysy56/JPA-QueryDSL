@@ -1,7 +1,11 @@
 package com.sparta.greeypeople.menu.entity;
 
+import com.sparta.greeypeople.order.entity.OrderMenu;
+import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,9 +28,12 @@ public class Menu {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "store_id", nullable = false)
-//    private Store store;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
+    @OneToMany(mappedBy = "menu")
+    private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Column
     private Long menuLikes;

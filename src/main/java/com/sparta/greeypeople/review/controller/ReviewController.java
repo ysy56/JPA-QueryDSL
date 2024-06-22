@@ -62,7 +62,7 @@ public class ReviewController {
     public ResponseEntity<DataCommonResponse<ReviewResponseDto>> updateReview(
         @PathVariable Long storeId,
         @PathVariable Long reviewId,
-        @RequestBody ReviewRequestDto reviewRequestDto,
+        @Valid @RequestBody ReviewRequestDto reviewRequestDto,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
         ReviewResponseDto responseDto = reviewService.updateReview(storeId,reviewId,reviewRequestDto,userDetails.getUser());
