@@ -13,6 +13,10 @@ import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.user.entity.User;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,8 +57,19 @@ public class OrderService {
     }
 
     //주문 전체 조회
-    public List<OrderResponseDto> getAllOrder() {
-        return orderRepository.findAll().stream().map(OrderResponseDto::new).toList();
+//    public List<OrderResponseDto> getAllOrder() {
+//        return orderRepository.findAll().stream().map(OrderResponseDto::new).toList();
+//    }
+
+//페이징 시도
+    public Page<OrderResponseDto> getAllOrder(int page, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ?  Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, 5, sort);
+        Page<Order> orderList;
+        orderList = orderRepository.findAll(pageable);
+        return orderList.map(OrderResponseDto::new);
+
     }
 
     //주문 수정
