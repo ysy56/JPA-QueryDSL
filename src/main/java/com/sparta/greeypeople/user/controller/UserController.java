@@ -1,16 +1,23 @@
-/*
 package com.sparta.greeypeople.user.controller;
 
+import com.sparta.greeypeople.user.dto.request.PasswordRequestDto;
+import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.greeypeople.common.StatusCommonResponse;
-import com.sparta.greeypeople.user.service.KakaoService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +26,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-	private final UserService userService;
-	private final KakaoService kakaoService;
 
+    private final UserService userService;
 
-	@GetMapping("/login/kakao")
-	public ResponseEntity<StatusCommonResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-		String token = kakaoService.kakaoLogin(code);  // JWT 반환
+    @PostMapping("/signup")
+    public ResponseEntity<StatusCommonResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+        userService.signup(requestDto);
 
-		// JWT를 응답 헤더에 추가
-		Object JwtUtil;
-		response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        StatusCommonResponse commonResponse = new StatusCommonResponse(201, "회원가입 성공");
 
-		// 클라이언트에게 성공적인 로그인 메시지 반환
-		StatusCommonResponse commonResponse = new StatusCommonResponse(200, "카카오 로그인 성공");
-		return ResponseEntity.ok().body(commonResponse);
-	}
+        return new ResponseEntity<>(commonResponse, HttpStatus.CREATED);
+    }
 
+    @PostMapping("/logout")
+    public ResponseEntity<StatusCommonResponse> logout() {
+        userService.logout();
+
+        StatusCommonResponse commonResponse = new StatusCommonResponse(200, "로그아웃 성공");
+
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/withdrawal")
+    public ResponseEntity<StatusCommonResponse> withdrawal(@Valid @RequestBody PasswordRequestDto requestDto) {
+        userService.withdrawal(requestDto);
+
+        StatusCommonResponse commonResponse = new StatusCommonResponse(200, "회원탈퇴 성공");
+
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<StatusCommonResponse> refresh(HttpServletRequest request) {
+        HttpHeaders headers = userService.refresh(request);
+
+        StatusCommonResponse commonResponse = new StatusCommonResponse(200, "RefreshToken 인증 성공");
+
+        return new ResponseEntity<>(commonResponse, headers, HttpStatus.OK);
+    }
 }
-
- */

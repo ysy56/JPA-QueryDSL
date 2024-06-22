@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.user.dto.request;
 
+import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,6 @@ import lombok.Builder;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SignupRequestDto {
 
     @NotBlank(message = "사용자 ID를 입력해주세요")
@@ -32,9 +32,6 @@ public class SignupRequestDto {
     private String email;
 
     private String intro;
-
-    @Pattern(regexp = "^(user|admin)$", message = "유효한 사용자 권한을 입력해주세요. ('user' 또는 'admin')")
-    private String userAuth;
 
     private String adminToken;
 }
