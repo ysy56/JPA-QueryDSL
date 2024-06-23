@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,21 +48,16 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-//    @GetMapping("/orders")
-//    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(){
-//        List<OrderResponseDto> orders = orderService.getAllOrder();
-//        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200,"주문 전체 조회 성공", orders);
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
-
+    @Transactional(readOnly = true)
     @GetMapping("/orders")
-    public ResponseEntity<DataCommonResponse<Page<OrderResponseDto>>>getAllOrder(
-        @RequestParam("page") int page,
-        @RequestParam("sortBy") String sortBy,
-        @RequestParam("isAsc") boolean isAsc
+    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+        @RequestParam(value = "isAsc", defaultValue = "true") boolean isAsc
     ){
-        Page<OrderResponseDto> orders = orderService.getAllOrder(page -1,sortBy,isAsc);
-        DataCommonResponse<Page<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
+        Page<OrderResponseDto> ordersPage = orderService.getAllOrder(page,sortBy,isAsc);
+        List<OrderResponseDto> orders = ordersPage.getContent();
+        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

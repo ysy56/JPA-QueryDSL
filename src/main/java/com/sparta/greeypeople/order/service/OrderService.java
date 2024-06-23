@@ -67,19 +67,13 @@ public class OrderService {
         return new OrderResponseDto(order);
     }
 
-    //주문 전체 조회
-//    public List<OrderResponseDto> getAllOrder() {
-//        return orderRepository.findAll().stream().map(OrderResponseDto::new).toList();
-//    }
-
-//페이징 시도
+    //전체 조회
     @Transactional(readOnly = true)
     public Page<OrderResponseDto> getAllOrder(int page, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ?  Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, 5, sort);
-        Page<Order> orderList;
-        orderList = orderRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, 5, sort);  // 5는 페이지 크기
+        Page<Order> orderList = orderRepository.findAll(pageable);
         return orderList.map(OrderResponseDto::new);
     }
 
