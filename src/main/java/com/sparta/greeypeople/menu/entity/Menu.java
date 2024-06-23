@@ -2,6 +2,7 @@ package com.sparta.greeypeople.menu.entity;
 
 import com.sparta.greeypeople.menu.dto.request.AdminMenuSaveRequestDto;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
+import com.sparta.greeypeople.order.entity.OrderMenu;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
