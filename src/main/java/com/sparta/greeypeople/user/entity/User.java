@@ -3,6 +3,7 @@ package com.sparta.greeypeople.user.entity;
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.common.TimeStamp;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
@@ -77,5 +78,14 @@ public class User extends TimeStamp {
 
     public void encryptionPassword(String password) {
         this.password = password;
+    }
+
+    public void updateProfile(AdminUserProfileRequestDto requestDto) {
+        this.userName = requestDto.getUserName();
+        this.intro = requestDto.getIntro();
+    }
+
+    public void updateAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 }
