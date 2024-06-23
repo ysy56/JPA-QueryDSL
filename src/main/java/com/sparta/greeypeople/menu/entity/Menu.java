@@ -5,6 +5,8 @@ import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,8 +31,11 @@ public class Menu {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "storeId", nullable = false)
+    @JoinColumn(name = "store_id", nullable = false)
     private Store store;
+
+    @OneToMany(mappedBy = "menu")
+    private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Column
     private Long menuLikes;
