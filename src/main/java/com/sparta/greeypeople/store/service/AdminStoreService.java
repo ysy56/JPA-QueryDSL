@@ -39,7 +39,7 @@ public class AdminStoreService {
 
     public Store findStore(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(
-                () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
+            () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
         );
     }
 
