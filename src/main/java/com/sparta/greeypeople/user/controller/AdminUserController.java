@@ -37,9 +37,10 @@ public class AdminUserController {
     /**
      * 특정 회원 프로필 수정 ( 인가 필요 )
      *
+     * @param userId : 수정할 회원의 Id
      * @return : 등록 된 특정 회원 정보
      */
-    @PutMapping("/{userId}/profile") // @AuthenticationPrincipal UserDetails
+    @PutMapping("/{userId}/profile")
     public ResponseEntity<DataCommonResponse<AdminUserResponseDto>> updateUserProfile(
         @PathVariable Long userId,
         @RequestBody AdminUserProfileRequestDto requestDto
@@ -53,6 +54,7 @@ public class AdminUserController {
     /**
      * 특정 회원 삭제 ( 인가 필요 )
      *
+     * @param userId : 수정할 회원의 Id
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
     @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
@@ -67,6 +69,7 @@ public class AdminUserController {
     /**
      * 회원 권한 변경 ( 인가 필요 )
      *
+     * @param userId : 권한을 변경할 회원의 Id
      * @return : 권한 변경 완료 메시지 상태 코드 반환
      */
     @PutMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
