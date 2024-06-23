@@ -35,8 +35,7 @@ public class UserService {
     @Value("${admin.token}")
     private String ADMIN_TOKEN;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-        JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
@@ -44,7 +43,6 @@ public class UserService {
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
-
         findByUserId(requestDto.getUserId()).ifPresent((el) -> {
             throw new ConflictException("이미 사용 중인 아이디입니다.");
         });
@@ -63,28 +61,20 @@ public class UserService {
 
         user.encryptionPassword(encodedPassword);
         userRepository.save(user);
-
     }
 
     @Transactional
     public void logout() {
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-            .getAuthentication().getPrincipal();
-        User user = findByUserId(userDetails.getUsername()).orElseThrow(
-            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = findByUserId(userDetails.getUsername()).orElseThrow(() -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         user.updateRefreshToken(null);
-
     }
 
     @Transactional
     public void withdrawal(PasswordRequestDto requestDto) {
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-            .getAuthentication().getPrincipal();
-        User user = findByUserId(userDetails.getUsername()).orElseThrow(
-            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = findByUserId(userDetails.getUsername()).orElseThrow(() -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         if (!checkPassword(requestDto.getPassword(), user.getPassword())) {
             throw new BadRequestException("비밀번호를 확인해주세요.");
@@ -95,14 +85,11 @@ public class UserService {
         }
 
         UserStatus userStatus = UserStatus.WITHDRAWN;
-
         user.updateUserStatus(userStatus);
-
     }
 
     @Transactional
     public HttpHeaders refresh(HttpServletRequest request) {
-
         Cookie[] cookies = request.getCookies();
         String tokenValue = null;
 
@@ -127,18 +114,15 @@ public class UserService {
         }
 
         Claims info = jwtUtil.getClaimsFromToken(tokenValue);
-        User user = findByUserId(info.getSubject()).orElseThrow(
-            () -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
+        User user = findByUserId(info.getSubject()).orElseThrow(() -> new DataNotFoundException("해당 회원은 존재하지 않습니다."));
 
         if (!user.getRefreshToken().equals(tokenValue)) {
             throw new UnauthorizedException("토큰 검증 실패");
         }
 
         String accessToken = jwtUtil.generateAccessToken(user.getUserId(), user.getUserName(), user.getUserAuth());
-        String refreshToken = jwtUtil.generateNewRefreshToken(user.getUserId(), user.getUserName(), user.getUserAuth(),
-            info.getExpiration());
-        ResponseCookie responseCookie = jwtUtil.generateNewRefreshTokenCookie(refreshToken,
-            info.getExpiration());
+        String refreshToken = jwtUtil.generateNewRefreshToken(user.getUserId(), user.getUserName(), user.getUserAuth(), info.getExpiration());
+        ResponseCookie responseCookie = jwtUtil.generateNewRefreshTokenCookie(refreshToken, info.getExpiration());
 
         user.updateRefreshToken(refreshToken);
 
@@ -156,5 +140,4 @@ public class UserService {
     public boolean checkPassword(String requestPassword, String userPassword) {
         return passwordEncoder.matches(requestPassword, userPassword);
     }
-
 }
