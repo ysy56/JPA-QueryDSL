@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AdminMenuController {
 
-    private AdminMenuService adminMenuService;
+    private final AdminMenuService adminMenuService;
 
     /**
      * 가게 메뉴 등록 기능 ( 인가 필요 )
@@ -77,7 +77,7 @@ public class AdminMenuController {
         adminMenuService.deleteMenu(storeId, menuId);
         StatusCommonResponse response = new StatusCommonResponse(204,
             "메뉴 삭제 성공");
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
