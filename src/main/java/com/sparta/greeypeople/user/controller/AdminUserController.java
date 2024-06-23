@@ -7,6 +7,8 @@ import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
 import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import com.sparta.greeypeople.user.service.AdminUserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,8 +44,8 @@ public class AdminUserController {
      */
     @PutMapping("/{userId}/profile")
     public ResponseEntity<DataCommonResponse<AdminUserResponseDto>> updateUserProfile(
-        @PathVariable Long userId,
-        @RequestBody AdminUserProfileRequestDto requestDto
+        @Min(1) @PathVariable Long userId,
+        @Valid @RequestBody AdminUserProfileRequestDto requestDto
     ) {
         AdminUserResponseDto responseDto = adminUserService.updateUserProfile(userId, requestDto);
         DataCommonResponse<AdminUserResponseDto> response = new DataCommonResponse<>(200,
@@ -59,7 +61,7 @@ public class AdminUserController {
      */
     @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse> deleteUser(
-        @PathVariable Long userId
+        @Min(1) @PathVariable Long userId
     ) {
         adminUserService.deleteUser(userId);
         StatusCommonResponse response = new StatusCommonResponse(204, "회원 삭제 성공");
@@ -74,8 +76,8 @@ public class AdminUserController {
      */
     @PutMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse> updateUserAuth(
-        @PathVariable Long userId,
-        @RequestBody AdminUserAuthRequestDto requestDto
+        @Min(1) @PathVariable Long userId,
+        @Valid @RequestBody AdminUserAuthRequestDto requestDto
     ) {
         adminUserService.updateUserAuth(userId, requestDto);
         StatusCommonResponse response = new StatusCommonResponse(200, "회원 권한 변경 성공");
