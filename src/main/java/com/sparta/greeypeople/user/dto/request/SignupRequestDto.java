@@ -1,11 +1,9 @@
 package com.sparta.greeypeople.user.dto.request;
 
-import com.sparta.greeypeople.user.enumeration.UserAuth;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Builder;
 
 /**
  * 회원가입 요청 DTO
@@ -34,4 +32,8 @@ public class SignupRequestDto {
     private String intro;
 
     private String adminToken;
+
+    public String getAdminToken() {
+        return adminToken != null ? adminToken : "";
+    }
 }
