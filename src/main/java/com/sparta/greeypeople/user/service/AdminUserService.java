@@ -2,7 +2,6 @@ package com.sparta.greeypeople.user.service;
 
 import com.sparta.greeypeople.exception.ConflictException;
 import com.sparta.greeypeople.exception.DataNotFoundException;
-import com.sparta.greeypeople.exception.ForbiddenException;
 import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
 import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
@@ -10,10 +9,9 @@ import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +21,12 @@ public class AdminUserService {
 
     public List<AdminUserResponseDto> findAllUser() {
         return userRepository.findAll()
-                .stream().map(AdminUserResponseDto::new).toList();
+            .stream().map(AdminUserResponseDto::new).toList();
     }
 
     @Transactional
-    public AdminUserResponseDto updateUserProfile(Long userId, AdminUserProfileRequestDto requestDto) {
+    public AdminUserResponseDto updateUserProfile(Long userId,
+        AdminUserProfileRequestDto requestDto) {
         User user = findUser(userId);
 
         user.updateProfile(requestDto);
@@ -56,7 +55,7 @@ public class AdminUserService {
 
     public User findUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new DataNotFoundException("해당 사용자는 존재하지 않습니다.")
+            () -> new DataNotFoundException("해당 사용자는 존재하지 않습니다.")
         );
     }
 }

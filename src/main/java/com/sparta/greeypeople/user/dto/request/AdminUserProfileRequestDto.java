@@ -1,8 +1,8 @@
 package com.sparta.greeypeople.user.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
@@ -12,4 +12,5 @@ public class AdminUserProfileRequestDto {
     private String userName;
 
     private String intro;
+
 }

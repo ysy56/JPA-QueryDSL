@@ -1,12 +1,13 @@
 package com.sparta.greeypeople.user.dto.response;
 
+import com.sparta.greeypeople.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.sparta.greeypeople.user.entity.User;
 
 @Getter
 @NoArgsConstructor
 public class AdminUserResponseDto {
+
     private String userId;
     private String userName;
     private String intro;
