@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stores")
+@RequestMapping("/admin/stores")
 public class AdminFollowController {
 
     private final AdminFollowService adminFollowService;
