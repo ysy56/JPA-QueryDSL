@@ -60,7 +60,7 @@ public class AdminStoreController {
     ) {
         adminStoreService.deleteStore(storeId);
         StatusCommonResponse response = new StatusCommonResponse(204, "가게 수정 성공");
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
