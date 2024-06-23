@@ -25,7 +25,6 @@ public class ReviewService {
         this.storeRepository = storeRepository;
     }
 
-    //리뷰 등록
     public ReviewResponseDto createReview(ReviewRequestDto reviewRequestDto, Long storeId, User user) {
         Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
@@ -34,7 +33,6 @@ public class ReviewService {
         return new ReviewResponseDto(review);
     }
 
-    //리뷰 단건 조회
     public ReviewResponseDto getReview(Long storeId, Long reviewId) {
         storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
@@ -46,14 +44,12 @@ public class ReviewService {
         return new ReviewResponseDto(review);
     }
 
-    //리뷰 전체 조회
     public List<ReviewResponseDto> getAllReviews(Long storeId) {
         List<Review> reviews = reviewRepository.findAllByStoreId(storeId);
 
         return reviews.stream().map(ReviewResponseDto::new).collect(Collectors.toList());
     }
 
-    //리뷰 수정
     public ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto reviewRequestDto, User user) {
         Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
@@ -77,7 +73,6 @@ public class ReviewService {
         return new ReviewResponseDto(review);
     }
 
-    //리뷰 삭제
     public void deleteReview(Long storeId, Long reviewId, User user) {
         Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
@@ -92,5 +87,4 @@ public class ReviewService {
         }
         reviewRepository.delete(review);
     }
-
 }

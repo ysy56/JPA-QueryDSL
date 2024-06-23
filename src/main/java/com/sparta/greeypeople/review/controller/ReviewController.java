@@ -26,7 +26,13 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    //리뷰 등록
+    /**
+     * 리뷰 등록 기능
+     *
+     * @param storeId    : 리뷰 등록 할 가게의 Id
+     * @param reviewRequestDto : 등록할 리뷰 정보
+     * @return : 등록된 리뷰 정보
+     */
     @PostMapping("/stores/{storeId}/review")
     public ResponseEntity<DataCommonResponse<ReviewResponseDto>> createReview(
         @PathVariable Long storeId,
@@ -37,7 +43,13 @@ public class ReviewController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    //리뷰 단건 조회
+    /**
+     * 리뷰 단건 조회 기능
+     *
+     * @param storeId    : 리뷰 등록된 가게의 Id
+     * @param reviewId : 등록된 리뷰 정보 Id
+     * @return : 등록된 리뷰 정보
+     */
     @GetMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<DataCommonResponse<ReviewResponseDto>> getReview(
         @PathVariable Long storeId,
@@ -48,7 +60,12 @@ public class ReviewController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //리뷰 전체 조회
+    /**
+     * 리뷰 전체 조회 기능
+     *
+     * @param storeId    : 리뷰 등록된 가게의 Id
+     * @return : 등록된 리뷰 정보
+     */
     @GetMapping("/stores/{storeId}/reviews")
     public ResponseEntity<DataCommonResponse<List<ReviewResponseDto>>> getAllReviews(
         @PathVariable Long storeId){
@@ -57,7 +74,14 @@ public class ReviewController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //리뷰 수정
+    /**
+     * 리뷰 수정 기능
+     *
+     * @param storeId    : 리뷰 등록된 가게의 Id
+     * @param reviewId : 등록된 리뷰 정보 Id
+     * @param reviewRequestDto : 수정할 리뷰 정보
+     * @return : 등록된 리뷰 정보
+     */
     @PutMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<DataCommonResponse<ReviewResponseDto>> updateReview(
         @PathVariable Long storeId,
@@ -71,7 +95,13 @@ public class ReviewController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    //리뷰 삭제
+    /**
+     * 리뷰 수정 기능
+     *
+     * @param storeId    : 리뷰 등록된 가게의 Id
+     * @param reviewId : 삭제할 리뷰 정보 Id
+     * @return : 삭제 성공 메세지
+     */
     @DeleteMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<StatusCommonResponse> deleteReview(
         @PathVariable Long storeId,
@@ -82,6 +112,4 @@ public class ReviewController {
         StatusCommonResponse response = new StatusCommonResponse(200,"리뷰 삭제 성공");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-
-
 }

@@ -29,6 +29,13 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    /**
+     * 주문 등록 기능
+     *
+     * @param storeId    : 주문 등록 할 가게의 Id
+     * @param orderRequest : 등록할 주문 정보
+     * @return : 등록 주문 정보
+     */
     @PostMapping("/stores/{storeId}/order")
     public ResponseEntity<DataCommonResponse<OrderResponseDto>>createOrder(
         @PathVariable Long storeId,
@@ -39,6 +46,12 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    /**
+     * 주문 단건 조회 기능
+     *
+     * @param orderId    : 조회할 주문 Id
+     * @return : 등록된 주문 정보
+     */
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<DataCommonResponse<OrderResponseDto>>getOrder(
         @PathVariable Long orderId
@@ -48,6 +61,11 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     * 주문 단건 전체 기능
+     *
+     * @return : 등록된 주문 정보
+     */
     @Transactional(readOnly = true)
     @GetMapping("/orders")
     public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(
@@ -61,6 +79,13 @@ public class OrderController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    /**
+     * 주문 수정 기능
+     *
+     * @param orderId    : 수정할 주문 Id
+     * @param orderRequestDto : 수정할 주문 정보
+     * @return : 수정된 주문 정보
+     */
     @PutMapping("/orders/{orderId}")
     public ResponseEntity<DataCommonResponse<OrderResponseDto>>updateOrder(
         @PathVariable Long orderId,
@@ -73,6 +98,12 @@ public class OrderController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    /**
+     * 주문 삭제 기능
+     *
+     * @param orderId    : 삭제할 주문 Id
+     * @return : 삭제 성공 메세지
+     */
     @DeleteMapping("/orders/{orderId}")
     public ResponseEntity<StatusCommonResponse>deleteOrder(
         @PathVariable Long orderId,
