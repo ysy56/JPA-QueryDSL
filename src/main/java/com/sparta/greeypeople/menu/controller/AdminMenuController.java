@@ -6,6 +6,8 @@ import com.sparta.greeypeople.menu.dto.request.AdminMenuSaveRequestDto;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
 import com.sparta.greeypeople.menu.dto.response.AdminMenuResponseDto;
 import com.sparta.greeypeople.menu.service.AdminMenuService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +33,12 @@ public class AdminMenuController {
      * @param requestDto : 등록할 메뉴의 정보
      * @return : 등록 된 가게 메뉴의 정보
      */
-    @PostMapping("/menu") // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<DataCommonResponse<AdminMenuResponseDto>> saveMenu(
-        @PathVariable Long storeId,
-        @RequestBody AdminMenuSaveRequestDto requestDto
+    @PostMapping("/menu")
+    public ResponseEntity<DataCommonResponse<AdminMenuResponseDto>> postMenu(
+        @Min(1) @PathVariable Long storeId,
+        @Valid @RequestBody AdminMenuSaveRequestDto requestDto
     ) {
-        AdminMenuResponseDto responseDto = adminMenuService.saveMenu(storeId, requestDto);
+        AdminMenuResponseDto responseDto = adminMenuService.createMenu(storeId, requestDto);
         DataCommonResponse<AdminMenuResponseDto> response = new DataCommonResponse<>(201,
             "메뉴 등록 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -50,11 +52,11 @@ public class AdminMenuController {
      * @param requestDto : 등록할 메뉴의 정보
      * @return : 수정 된 가게 메뉴의 정보
      */
-    @PutMapping("/menu/{menuId}") // @AuthenticationPrincipal UserDetails
+    @PutMapping("/menu/{menuId}")
     public ResponseEntity<DataCommonResponse<AdminMenuResponseDto>> updateMenu(
-        @PathVariable Long storeId,
-        @PathVariable Long menuId,
-        @RequestBody AdminMenuUpdateRequestDto requestDto
+        @Min(1) @PathVariable Long storeId,
+        @Min(1) @PathVariable Long menuId,
+        @Valid @RequestBody AdminMenuUpdateRequestDto requestDto
     ) {
         AdminMenuResponseDto responseDto = adminMenuService.updateMenu(storeId, menuId, requestDto);
         DataCommonResponse<AdminMenuResponseDto> response = new DataCommonResponse<>(201,
@@ -69,10 +71,10 @@ public class AdminMenuController {
      * @param menuId  : 삭제할 메뉴의 Id
      * @return : 삭제 완료 메시지 상태 코드 반환
      */
-    @DeleteMapping("/menu/{menuId}") // @AuthenticationPrincipal UserDetails
+    @DeleteMapping("/menu/{menuId}")
     public ResponseEntity<StatusCommonResponse> deleteMenu(
-        @PathVariable Long storeId,
-        @PathVariable Long menuId
+        @Min(1) @PathVariable Long storeId,
+        @Min(1) @PathVariable Long menuId
     ) {
         adminMenuService.deleteMenu(storeId, menuId);
         StatusCommonResponse response = new StatusCommonResponse(204,
