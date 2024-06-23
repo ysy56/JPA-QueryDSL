@@ -31,10 +31,10 @@ public class AdminStoreController {
      * @return : 등록 된 가게의 정보
      */
     @PostMapping("/store")
-    public ResponseEntity<DataCommonResponse<AdminStoreResponseDto>> saveStore(
+    public ResponseEntity<DataCommonResponse<AdminStoreResponseDto>> postStore(
         @RequestBody AdminStoreSaveRequestDto requestDto
     ) {
-        AdminStoreResponseDto responseDto = adminStoreService.saveStore(requestDto);
+        AdminStoreResponseDto responseDto = adminStoreService.createStore(requestDto);
         DataCommonResponse<AdminStoreResponseDto> response = new DataCommonResponse<>(201,
             "가게 등록 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

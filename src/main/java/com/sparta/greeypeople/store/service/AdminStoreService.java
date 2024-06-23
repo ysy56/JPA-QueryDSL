@@ -16,7 +16,7 @@ public class AdminStoreService {
 
     private final StoreRepository storeRepository;
 
-    public AdminStoreResponseDto saveStore(AdminStoreSaveRequestDto requestDto) {
+    public AdminStoreResponseDto createStore(AdminStoreSaveRequestDto requestDto) {
         Store store = storeRepository.save(new Store(requestDto));
 
         return new AdminStoreResponseDto(store);
