@@ -2,13 +2,16 @@ package com.sparta.greeypeople.user.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
+import com.sparta.greeypeople.common.TimeStamp;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
+import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
+import com.sparta.greeypeople.user.enumeration.UserStatus;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 /**
  * 사용자 엔티티 클래스 데이터베이스의 사용자 정보를 나타내는 클래스
@@ -17,7 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,14 +45,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserAuth userAuth;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
     @Column(unique = true)
     private String refreshToken;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Menu> menu = new ArrayList<>();
@@ -57,52 +58,34 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Review> comments = new ArrayList<>();
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public User(String userId, String password, String userName, String email, UserAuth userAuth) {
-        this.userId = userId;
-        this.password = password;
-        this.userName = userName;
-        this.email = email;
+    public User(SignupRequestDto requestDto, UserStatus userStatus, UserAuth userAuth) {
+        this.userId = requestDto.getUserId();
+        this.password = requestDto.getPassword();
+        this.userName = requestDto.getUserName();
+        this.email = requestDto.getEmail();
+        this.intro = requestDto.getIntro();
+        this.userStatus = userStatus;
         this.userAuth = userAuth;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void updatePassword(String password) {
-        this.password = password;
-    }
-
-    public void updateUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void updateEmail(String email) {
-        this.email = email;
-    }
-
-    public void updateIntro(String intro) {
-        this.intro = intro;
-    }
-
-    public void updateUserAuth(UserAuth userAuth) {
-        this.userAuth = userAuth;
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void encryptionPassword(String password) {
+        this.password = password;
+    }
+
+    public void updateProfile(AdminUserProfileRequestDto requestDto) {
+        this.userName = requestDto.getUserName();
+        this.intro = requestDto.getIntro();
+    }
+
+    public void updateAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 }

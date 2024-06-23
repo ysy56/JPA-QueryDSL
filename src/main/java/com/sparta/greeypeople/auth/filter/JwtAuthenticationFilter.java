@@ -1,74 +1,105 @@
 package com.sparta.greeypeople.auth.filter;
 
-import com.sparta.greeypeople.auth.security.UserDetailsServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.auth.util.JwtUtil;
+import com.sparta.greeypeople.common.StatusCommonResponse;
+import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.enumeration.UserAuth;
+import com.sparta.greeypeople.user.enumeration.UserStatus;
+import com.sparta.greeypeople.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
+import java.util.Optional;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * JWT 인증 필터: 모든 HTTP 요청이 이 필터를 거침
- * 클라이언트로부터 HTTP 요청을 가로채서 JWT 토큰을 검사하고,
- * 유효한 토큰이면 사용자 정보를 SecurityContext에 저장
- */
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+        setFilterProcessesUrl("/users/login");
     }
 
-    /**
-     * 요청 필터링: JWT 토큰을 검증해서 유효하면 사용자 정보를 설정
-     * @param request HTTP 요청
-     * @param response HTTP 응답
-     * @param chain 필터 체인
-     * @throws ServletException 서블릿 예외
-     * @throws IOException 입출력 예외
-     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+        HttpServletResponse response) throws AuthenticationException {
 
-        // 요청 헤더에서 Authorization 추출
-        final String authorizationHeader = request.getHeader("Authorization");
-
-        String username = null;
-        String jwt = null;
-
-        // authorizationHeader가 존재하고 "Bearer "로 시작할 경우
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7); // "Bearer " 이후의 JWT 토큰 부분
-            username = jwtUtil.getUsernameFromToken(jwt); // JWT 토큰에서 사용자 이름 추출
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException("잘못된 http 요청입니다.");
         }
 
-        // 사용자 이름이 존재하고 현재 SecurityContext에 인증 정보가 없는 경우
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+        try {
 
-            // JWT 토큰이 유효한 경우
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
+            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                LoginRequestDto.class);
+
+            return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                    requestDto.getPassword(), null));
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
         }
-        // 다음 필터로 요청을 전달
-        chain.doFilter(request, response);
+
     }
+
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, FilterChain chain, Authentication authResult)
+        throws IOException, ServletException {
+
+        String userId = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        String userName = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserName();
+        UserAuth userAuth = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserAuth();
+
+        Optional<User> user = userRepository.findByUserId(userId);
+
+        if (user.isEmpty() || user.get().getUserStatus().equals(UserStatus.WITHDRAWN)) {
+
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("text/plain;charset=UTF-8");
+            response.getWriter().write("아이디, 비밀번호를 확인해주세요.");
+
+            return;
+        }
+
+        String accessToken = jwtUtil.generateAccessToken(userId, userName, userAuth);
+        String refreshToken = jwtUtil.generateRefreshToken(userId, userName, userAuth);
+        ResponseCookie refreshTokenCookie = jwtUtil.generateRefreshTokenCookie(refreshToken);
+
+        user.get().updateRefreshToken(refreshToken);
+        userRepository.save(user.get());
+
+        StatusCommonResponse commonResponse = new StatusCommonResponse(200, "로그인 성공");
+
+        response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(commonResponse));
+
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, AuthenticationException failed)
+        throws IOException, ServletException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setContentType("text/plain;charset=UTF-8");
+        response.getWriter().write("아이디, 비밀번호를 확인해주세요.");
+    }
+
 }
