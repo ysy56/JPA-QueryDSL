@@ -36,13 +36,13 @@ public class MenuLikesService {
 			throw new BadRequestException("자신이 등록한 메뉴에는 좋아요를 남길 수 없습니다.");
 		}
 
-		var MenuLikes = new MenuLikes(foundUser, foundMenu);
+		MenuLikes menuLikes = new MenuLikes(foundUser, foundMenu);
 
 		if (menuLikesRepository.findByUserAndMenu(foundUser, foundMenu).isPresent()) {
 			throw new ViolatedException("이미 좋아요를 누른 메뉴입니다.");
 		}
 
-		menuLikesRepository.save(MenuLikes);
+		menuLikesRepository.save(menuLikes);
 		foundMenu.addLike();
 	}
 
