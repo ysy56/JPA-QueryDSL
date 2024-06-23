@@ -29,8 +29,8 @@ public class AdminUserController {
      * @return : 등록 된 전체 회원 정보
      */
     @GetMapping // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<DataCommonResponse<List<AdminUserResponseDto>>> selectAllUser() {
-        List<AdminUserResponseDto> responseDto = adminUserService.getAllUsers();
+    public ResponseEntity<DataCommonResponse<List<AdminUserResponseDto>>> getAllUser() {
+        List<AdminUserResponseDto> responseDto = adminUserService.findAllUser();
         DataCommonResponse<List<AdminUserResponseDto>> response = new DataCommonResponse<>(200,
             "전체 회원 조회 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);

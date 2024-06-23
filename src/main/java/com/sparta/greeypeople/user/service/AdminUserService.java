@@ -21,7 +21,7 @@ public class AdminUserService {
 
     private final UserRepository userRepository;
 
-    public List<AdminUserResponseDto> getAllUsers() {
+    public List<AdminUserResponseDto> findAllUser() {
         return userRepository.findAll()
                 .stream().map(AdminUserResponseDto::new).toList();
     }
