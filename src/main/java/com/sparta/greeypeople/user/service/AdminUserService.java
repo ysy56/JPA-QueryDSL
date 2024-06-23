@@ -8,10 +8,10 @@ import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +19,7 @@ public class AdminUserService {
 
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<AdminUserResponseDto> findAllUser() {
         return userRepository.findAll()
             .stream().map(AdminUserResponseDto::new).toList();
@@ -34,6 +35,7 @@ public class AdminUserService {
         return new AdminUserResponseDto(user);
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
         User user = findUser(userId);
 
