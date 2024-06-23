@@ -6,6 +6,8 @@ import com.sparta.greeypeople.store.dto.request.AdminStoreSaveRequestDto;
 import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import com.sparta.greeypeople.store.dto.response.AdminStoreResponseDto;
 import com.sparta.greeypeople.store.service.AdminStoreService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class AdminStoreController {
      */
     @PostMapping("/store")
     public ResponseEntity<DataCommonResponse<AdminStoreResponseDto>> postStore(
-        @RequestBody AdminStoreSaveRequestDto requestDto
+        @Valid @RequestBody AdminStoreSaveRequestDto requestDto
     ) {
         AdminStoreResponseDto responseDto = adminStoreService.createStore(requestDto);
         DataCommonResponse<AdminStoreResponseDto> response = new DataCommonResponse<>(201,
@@ -49,8 +51,8 @@ public class AdminStoreController {
      */
     @PutMapping("/stores/{storeId}")
     public ResponseEntity<DataCommonResponse<AdminStoreResponseDto>> updateStore(
-        @PathVariable Long storeId,
-        @RequestBody AdminStoreUpdateRequestDto requestDto
+        @Min(1) @PathVariable Long storeId,
+        @Valid @RequestBody AdminStoreUpdateRequestDto requestDto
     ) {
         AdminStoreResponseDto responseDto = adminStoreService.updateStore(storeId, requestDto);
         DataCommonResponse<AdminStoreResponseDto> response = new DataCommonResponse<>(200,
@@ -66,7 +68,7 @@ public class AdminStoreController {
      */
     @DeleteMapping("/stores/{storeId}")
     public ResponseEntity<StatusCommonResponse> deleteStore(
-        @PathVariable Long storeId
+        @Min(1) @PathVariable Long storeId
     ) {
         adminStoreService.deleteStore(storeId);
         StatusCommonResponse response = new StatusCommonResponse(204, "가게 수정 성공");
