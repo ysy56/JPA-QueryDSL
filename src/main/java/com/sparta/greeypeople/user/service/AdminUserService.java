@@ -10,18 +10,16 @@ import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AdminUserService {
 
     private final UserRepository userRepository;
-
-    public AdminUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public List<AdminUserResponseDto> getAllUsers() {
         return userRepository.findAll()
