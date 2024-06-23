@@ -6,9 +6,9 @@ import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import com.sparta.greeypeople.store.dto.response.AdminStoreResponseDto;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +16,7 @@ public class AdminStoreService {
 
     private final StoreRepository storeRepository;
 
+    @Transactional(readOnly = true)
     public AdminStoreResponseDto createStore(AdminStoreSaveRequestDto requestDto) {
         Store store = storeRepository.save(new Store(requestDto));
 
@@ -31,6 +32,7 @@ public class AdminStoreService {
         return new AdminStoreResponseDto(store);
     }
 
+    @Transactional
     public void deleteStore(Long storeId) {
         Store store = findStore(storeId);
 
