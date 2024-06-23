@@ -2,6 +2,8 @@ package com.sparta.greeypeople.order.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ForbiddenException;
+import com.sparta.greeypeople.menu.entity.Menu;
+import com.sparta.greeypeople.menu.repository.MenuRepository;
 import com.sparta.greeypeople.order.dto.request.OrderMenuList;
 import com.sparta.greeypeople.order.dto.request.OrderRequestDto;
 import com.sparta.greeypeople.order.dto.response.OrderResponseDto;
@@ -13,39 +15,52 @@ import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.user.entity.User;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
     private final OrderMenuRepository orderMenuRepository;
+    private final MenuRepository menuRepository;
 
-    public OrderService(OrderRepository orderRepository, StoreRepository storeRepository,OrderMenuRepository orderMenuRepository){
-        this.orderRepository = orderRepository;
-        this.storeRepository = storeRepository;
-        this.orderMenuRepository = orderMenuRepository;
-    }
+//    public OrderService(OrderRepository orderRepository, StoreRepository storeRepository,OrderMenuRepository orderMenuRepository){
+//        this.orderRepository = orderRepository;
+//        this.storeRepository = storeRepository;
+//        this.orderMenuRepository = orderMenuRepository;
+//    }
 
     //주문 등록
-    public OrderResponseDto createOrder(Long stordId, OrderRequestDto orderRequest, User user) {
-        Store store = storeRepository.findById(stordId).orElseThrow(
+    @Transactional
+    public OrderResponseDto createOrder(Long storeId, OrderRequestDto orderRequest, User user) {
+        Store store = storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
         );
+        List<Long> ids = orderRequest.getMenuList().stream()
+            .map(OrderMenuList::getMenuId)
+            .toList();
 
-        List<Long> ids = orderRequest.getMenuList().stream().map(OrderMenuList::getMenuId).toList();
-        List<OrderMenu> orderMenus = orderMenuRepository.findByIdIn(ids);
-        Order order = orderRepository.save(new Order(store,orderMenus,user));
+        List<Menu> menus = menuRepository.findAllById(ids);
+
+        Order order = new Order(store, user);
+
+        List<OrderMenu> orderMenus = menus.stream().map(OrderMenu::new).toList();
+        orderMenus.forEach(order::addOrderMenu);
+
+        Order savedOrder = orderRepository.save(order);
 
         if (!order.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("주문 작성 권한이 없습니다.");
         }
-
-        return new OrderResponseDto(order);
+        return new OrderResponseDto(savedOrder);
     }
 
     //주문 단건 조회

@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @PostMapping("/stores/{stordId}/order")
+    @PostMapping("/stores/{storeId}/order")
     public ResponseEntity<DataCommonResponse<OrderResponseDto>>createOrder(
-        @PathVariable Long stordId,
+        @PathVariable Long storeId,
         @RequestBody OrderRequestDto orderRequest,
         @AuthenticationPrincipal UserDetailsImpl userDetails){
-        OrderResponseDto responseDto = orderService.createOrder(stordId, orderRequest, userDetails.getUser());
+        OrderResponseDto responseDto = orderService.createOrder(storeId, orderRequest, userDetails.getUser());
         DataCommonResponse<OrderResponseDto> response = new DataCommonResponse<>(201,"주문 작성 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -44,13 +44,6 @@ public class OrderController {
         DataCommonResponse<OrderResponseDto> response = new DataCommonResponse<>(200, "주문 단건 조회 성공", order);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-//    @GetMapping("/orders")
-//    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(){
-//        List<OrderResponseDto> orders = orderService.getAllOrder();
-//        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
 
     @GetMapping("/orders")
     public ResponseEntity<DataCommonResponse<Page<OrderResponseDto>>>getAllOrder(
