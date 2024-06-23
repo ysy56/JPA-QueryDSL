@@ -6,6 +6,8 @@ import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.order.dto.request.OrderRequestDto;
 import com.sparta.greeypeople.order.dto.response.OrderResponseDto;
 import com.sparta.greeypeople.order.service.OrderService;
+import java.util.List;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,13 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+//    @GetMapping("/orders")
+//    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(){
+//        List<OrderResponseDto> orders = orderService.getAllOrder();
+//        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200,"주문 전체 조회 성공", orders);
+//        return new ResponseEntity<>(response,HttpStatus.OK);
+//    }
+
     @GetMapping("/orders")
     public ResponseEntity<DataCommonResponse<Page<OrderResponseDto>>>getAllOrder(
         @RequestParam("page") int page,
@@ -73,7 +82,7 @@ public class OrderController {
         @PathVariable Long orderId,
         @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.deleteOrder(orderId, userDetails.getUser());
-        StatusCommonResponse response = new StatusCommonResponse(200,"리뷰 삭제 성공");
+        StatusCommonResponse response = new StatusCommonResponse(200,"주문 취소 성공");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

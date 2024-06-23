@@ -20,9 +20,9 @@ public class Order extends TimeStamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private Process process;
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Process process;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -35,16 +35,20 @@ public class Order extends TimeStamp {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
-    public Order(Store store, User user) {
+    public Order(Store store, User user, Process process) {
         this.store = store;
         this.user = user;
+        this.process = process;
     }
 
     public void addOrderMenu(OrderMenu orderMenu) {
         orderMenus.add(orderMenu);
         orderMenu.setOrder(this);
     }
-    public void update(List<OrderMenu> orderMenus) {
-        this.orderMenus = orderMenus;
+    public void update(List<OrderMenu> newOrderMenus) {
+        this.orderMenus.clear();
+        for (OrderMenu orderMenu : newOrderMenus) {
+            addOrderMenu(orderMenu);
+        }
     }
 }
