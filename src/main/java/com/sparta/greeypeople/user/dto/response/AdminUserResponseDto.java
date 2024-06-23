@@ -13,7 +13,7 @@ public class AdminUserResponseDto {
 
     public AdminUserResponseDto(User user) {
         this.userId = user.getUserId();
-        this.userName = user.getUsername();
+        this.userName = user.getUserName();
         this.intro = user.getIntro();
     }
 
