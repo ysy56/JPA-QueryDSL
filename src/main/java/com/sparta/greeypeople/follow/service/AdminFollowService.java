@@ -1,6 +1,8 @@
 package com.sparta.greeypeople.follow.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
+import com.sparta.greeypeople.follow.Follow;
+import com.sparta.greeypeople.follow.FollowRepository;
 import com.sparta.greeypeople.follow.dto.AdminFollowResponseDto;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
@@ -23,11 +25,12 @@ public class AdminFollowService {
         List<AdminFollowResponseDto> responseList = new ArrayList<>();
 
         for (Follow follow : followerList) {
-            Long userId = follow.getUserId();
-            User user = userRepository.findById(userId)
+            User user = follow.getUser();
+            Long userId = user.getId();
+            User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("해당 사용자는 존재하지 않습니다."));
 
-            AdminFollowResponseDto responseDto = new AdminFollowResponseDto(user.getUsername());
+            AdminFollowResponseDto responseDto = new AdminFollowResponseDto(findUser.getUserName());
             responseList.add(responseDto);
         }
 
@@ -35,9 +38,6 @@ public class AdminFollowService {
     }
 
     public List<Follow> findFollowerList(Long storeId) {
-        return followRepository.findByStoreId().orElseThrow(
-                () -> new DataNotFoundException("조회된 팔로워의 정보가 없습니다.")
-            )
-            .stream().map(BoardResponseDto::new).toList();
+        return followRepository.findAllByStoreId(storeId).stream().toList();
     }
 }
