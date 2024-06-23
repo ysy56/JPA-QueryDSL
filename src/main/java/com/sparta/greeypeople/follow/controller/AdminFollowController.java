@@ -22,10 +22,10 @@ public class AdminFollowController {
 
     /**
      * 특정 가게를 찜한 사람 조회 기능
-     *
+     * @param storeId : 찜한 사람을 조회할 가게 Id
      * @return : 특정 가게를 찜한 사람 조회 데이터
      */
-    @GetMapping("/{storeId}/follow")
+    @GetMapping("/{storeId}/follow") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<DataCommonResponse<List<AdminFollowResponseDto>>> selectStoreAllFollower(
         @PathVariable Long storeId
     ) {
