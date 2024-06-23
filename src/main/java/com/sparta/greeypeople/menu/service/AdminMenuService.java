@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.menu.service;
 
+import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuSaveRequestDto;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
@@ -10,7 +11,6 @@ import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
-import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
