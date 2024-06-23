@@ -1,8 +1,7 @@
-package com.sparta.greeypeople.like.review;
+package com.sparta.greeypeople.follow;
 
-import com.sparta.greeypeople.review.entity.Review;
+import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.common.TimeStamp;
-
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,9 +9,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "ReviewLikes_table")
 @NoArgsConstructor
-public class ReviewLikes extends TimeStamp {
+@Table(name = "follow_table")
+public class Follow extends TimeStamp{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,11 +22,11 @@ public class ReviewLikes extends TimeStamp {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_id", nullable = false)
-    private Review review;
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
-    public ReviewLikes(User user, Review review) {
+    public Follow(User user, Store store) {
         this.user = user;
-        this.review = review;
+        this.store = store;
     }
 }
