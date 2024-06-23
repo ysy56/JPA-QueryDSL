@@ -7,7 +7,6 @@ import com.sparta.greeypeople.order.dto.request.OrderRequestDto;
 import com.sparta.greeypeople.order.dto.response.OrderResponseDto;
 import com.sparta.greeypeople.order.service.OrderService;
 import java.util.List;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

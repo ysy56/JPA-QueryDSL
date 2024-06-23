@@ -8,18 +8,15 @@ import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MenuService {
 
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
-
-    public MenuService(StoreRepository storeRepository, MenuRepository menuRepository){
-        this.storeRepository = storeRepository;
-        this.menuRepository = menuRepository;
-    }
 
     public List<AdminMenuResponseDto> getStoreMenu(Long storeId) {
         findStore(storeId);

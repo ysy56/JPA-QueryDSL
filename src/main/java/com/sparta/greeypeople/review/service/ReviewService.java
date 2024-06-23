@@ -12,18 +12,15 @@ import com.sparta.greeypeople.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
-
-    public ReviewService (ReviewRepository reviewRepository, StoreRepository storeRepository){
-        this.reviewRepository = reviewRepository;
-        this.storeRepository = storeRepository;
-    }
 
     public ReviewResponseDto createReview(ReviewRequestDto reviewRequestDto, Long storeId, User user) {
         Store store = findStore(storeId);
