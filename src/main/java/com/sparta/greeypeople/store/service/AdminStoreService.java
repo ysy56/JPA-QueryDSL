@@ -16,7 +16,7 @@ public class AdminStoreService {
 
     private final StoreRepository storeRepository;
 
-    @Transactional(readOnly = true)
+
     public AdminStoreResponseDto createStore(AdminStoreSaveRequestDto requestDto) {
         Store store = storeRepository.save(new Store(requestDto));
 
