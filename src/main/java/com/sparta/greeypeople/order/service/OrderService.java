@@ -33,9 +33,7 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto createOrder(Long storeId, OrderRequestDto orderRequest, User user) {
-        Store store = storeRepository.findById(storeId).orElseThrow(
-            () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
-        );
+        Store store = findStore(storeId);
         Process process = Process.COMPLETED;
 
         List<Long> ids = orderRequest.getMenuList().stream()
@@ -58,9 +56,8 @@ public class OrderService {
     }
 
     public OrderResponseDto getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
+
         return new OrderResponseDto(order);
     }
 
@@ -75,9 +72,8 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto updateOrdeer(Long orderId, OrderRequestDto orderRequest, User user) {
-       Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
+
         if (!order.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("수정 권한이 없습니다.");
         }
@@ -98,14 +94,25 @@ public class OrderService {
     }
 
     public void deleteOrder(Long orderId, User user) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
         if (!order.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("삭제 권한이 없습니다.");
         }
 //        Process process = Process.CANCELED;
         orderRepository.delete(order);
     }
+
+    public Store findStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(
+            () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
+        );
+    }
+
+    public Order findOrder(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
+            () -> new DataNotFoundException("조회된 주문 정보가 없습니다")
+        );
+    }
+
 }
 
