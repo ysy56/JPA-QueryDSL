@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.review.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
+import com.sparta.greeypeople.exception.ForbiddenException;
 import com.sparta.greeypeople.review.dto.request.ReviewRequestDto;
 import com.sparta.greeypeople.review.dto.response.ReviewResponseDto;
 import com.sparta.greeypeople.review.entity.Review;
@@ -8,6 +9,7 @@ import com.sparta.greeypeople.review.repository.ReviewRepository;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.user.entity.User;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,10 @@ public class ReviewService {
 
         if (!review.getUser().getId().equals(user.getId())) {
             throw new IllegalStateException("수정 권한이 없습니다.");
+        }
+
+        if(review.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(1))) {
+            throw new ForbiddenException("댓글 수정 기간이 지났습니다.");
         }
 
         review.update(reviewRequestDto);

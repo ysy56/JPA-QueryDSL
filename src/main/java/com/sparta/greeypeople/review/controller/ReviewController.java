@@ -44,7 +44,7 @@ public class ReviewController {
         @PathVariable Long reviewId
     ){
         ReviewResponseDto review = reviewService.getReview(storeId,reviewId);
-        DataCommonResponse<ReviewResponseDto> response = new DataCommonResponse<>(200, "리뷰 조회 성공", review);
+        DataCommonResponse<ReviewResponseDto> response = new DataCommonResponse<>(200, "리뷰 조회 단건 성공", review);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class ReviewController {
     public ResponseEntity<DataCommonResponse<List<ReviewResponseDto>>> getAllReviews(
         @PathVariable Long storeId){
         List<ReviewResponseDto> reviews = reviewService.getAllReviews(storeId);
-        DataCommonResponse<List<ReviewResponseDto>> response = new DataCommonResponse<>(200,"리뷰 조회 성공", reviews);
+        DataCommonResponse<List<ReviewResponseDto>> response = new DataCommonResponse<>(200,"리뷰 조회 전체 성공", reviews);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
