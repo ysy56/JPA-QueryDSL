@@ -1,12 +1,12 @@
 package com.sparta.greeypeople.user.controller;
 
+import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.common.DataCommonResponse;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
 import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import com.sparta.greeypeople.user.service.AdminUserService;
-import com.sparta.greeypeople.user.service.UserDetailsImpl;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,11 +26,9 @@ public class AdminUserController {
      *
      * @return : 등록 된 전체 회원 정보
      */
-    @GetMapping() // @AuthenticationPrincipal UserDetails
-    public ResponseEntity<DataCommonResponse<List<AdminUserResponseDto>>> selectAllUser(
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        List<AdminUserResponseDto> responseDto = adminUserService.getAllUsers(userDetails.getUser().getId());
-        System.out.println("Number of users retrieved: " + responseDto.size());
+    @GetMapping // @AuthenticationPrincipal UserDetails
+    public ResponseEntity<DataCommonResponse<List<AdminUserResponseDto>>> selectAllUser() {
+        List<AdminUserResponseDto> responseDto = adminUserService.getAllUsers();
         DataCommonResponse<List<AdminUserResponseDto>> response = new DataCommonResponse<>(200,
             "전체 회원 조회 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -44,10 +42,9 @@ public class AdminUserController {
     @PutMapping("/{userId}/profile") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<DataCommonResponse<AdminUserResponseDto>> updateUserProfile(
         @PathVariable Long userId,
-        @RequestBody AdminUserProfileRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+        @RequestBody AdminUserProfileRequestDto requestDto
     ) {
-        AdminUserResponseDto responseDto = adminUserService.updateUserProfile(userId, requestDto, userDetails.getUser().getId());
+        AdminUserResponseDto responseDto = adminUserService.updateUserProfile(userId, requestDto);
         DataCommonResponse<AdminUserResponseDto> response = new DataCommonResponse<>(200,
             "특정 회원 프로필 수정 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -60,12 +57,11 @@ public class AdminUserController {
      */
     @DeleteMapping("/{userId}") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse> deleteUser(
-        @PathVariable Long userId,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+        @PathVariable Long userId
     ) {
-        adminUserService.deleteUser(userId, userDetails.getUser().getId());
+        adminUserService.deleteUser(userId);
         StatusCommonResponse response = new StatusCommonResponse(204, "회원 삭제 성공");
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -76,10 +72,9 @@ public class AdminUserController {
     @PutMapping("/{userId}/auth") // @AuthenticationPrincipal UserDetails
     public ResponseEntity<StatusCommonResponse> updateUserAuth(
         @PathVariable Long userId,
-        @RequestBody AdminUserAuthRequestDto requestDto,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
+        @RequestBody AdminUserAuthRequestDto requestDto
     ) {
-        adminUserService.updateUserAuth(userId, requestDto, userDetails.getUser().getId());
+        adminUserService.updateUserAuth(userId, requestDto);
         StatusCommonResponse response = new StatusCommonResponse(200, "회원 권한 변경 성공");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

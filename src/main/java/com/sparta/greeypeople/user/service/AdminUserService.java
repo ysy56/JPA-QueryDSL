@@ -23,17 +23,13 @@ public class AdminUserService {
         this.userRepository = userRepository;
     }
 
-    public List<AdminUserResponseDto> getAllUsers(Long adminUserId) {
-        checkAuth(adminUserId);
-
+    public List<AdminUserResponseDto> getAllUsers() {
         return userRepository.findAll()
                 .stream().map(AdminUserResponseDto::new).toList();
     }
 
     @Transactional
-    public AdminUserResponseDto updateUserProfile(Long userId, AdminUserProfileRequestDto requestDto, Long adminUserId) {
-        checkAuth(adminUserId);
-
+    public AdminUserResponseDto updateUserProfile(Long userId, AdminUserProfileRequestDto requestDto) {
         User user = findUser(userId);
 
         user.updateProfile(requestDto);
@@ -41,30 +37,21 @@ public class AdminUserService {
         return new AdminUserResponseDto(user);
     }
 
-    public void deleteUser(Long userId, Long adminUserId) {
-        checkAuth(adminUserId);
-
+    public void deleteUser(Long userId) {
         User user = findUser(userId);
 
         userRepository.delete(user);
     }
 
-    public void updateUserAuth(Long userId, AdminUserAuthRequestDto requestDto, Long adminUserId) {
-        checkAuth(adminUserId);
-
+    @Transactional
+    public void updateUserAuth(Long userId, AdminUserAuthRequestDto requestDto) {
         User user = findUser(userId);
 
-        UserAuth userAuth;
-
-        if (requestDto.getUserAuth().equals("admin")) {
-            userAuth = UserAuth.ADMIN;
-        } else {
-            userAuth = UserAuth.USER;
-        }
-
-        if (user.getUserAuth().equals(userAuth)) {
+        if (user.getUserAuth().equals(requestDto.getUserAuth())) {
             throw new ConflictException("해당 사용자의 변경하려고 하는 권한과 현재의 권한이 같습니다.");
         }
+
+        UserAuth userAuth = requestDto.getUserAuth();
 
         user.updateAuth(userAuth);
     }
@@ -73,15 +60,5 @@ public class AdminUserService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new DataNotFoundException("해당 사용자는 존재하지 않습니다.")
         );
-    }
-
-    public void checkAuth(Long userId) {
-        User user = findUser(userId);
-
-        UserAuth userAuth = UserAuth.ADMIN;
-
-        if (user.getUserAuth() != userAuth) {
-            throw new ForbiddenException("해당 사용자는 관리자가 아닙니다.");
-        }
     }
 }
