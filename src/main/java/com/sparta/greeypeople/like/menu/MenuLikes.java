@@ -1,11 +1,10 @@
 package com.sparta.greeypeople.like.menu;
 
 import com.sparta.greeypeople.menu.entity.Menu;
-import com.sparta.greeypeople.timestamp.TimeStamp;
+import com.sparta.greeypeople.common.TimeStamp;
 
 import com.sparta.greeypeople.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +25,6 @@ public class MenuLikes extends TimeStamp {
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
 
-	@Builder
 	public MenuLikes(User user, Menu menu) {
 		this.user = user;
 		this.menu = menu;

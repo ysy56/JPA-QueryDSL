@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.store.entity;
 
+import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.store.dto.request.AdminStoreSaveRequestDto;
 import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "store")
-public class Store {
+public class Store extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,32 +1,20 @@
-package com.sparta.greeypeople.user.service;
+package com.sparta.greeypeople.auth.security;
 
 import com.sparta.greeypeople.user.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
 
-/**
- * UserDetails 구현체
- * Spring Security에서 사용자의 인증 정보를 나타내는 클래스
- */
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
 
-
     public UserDetailsImpl(User user) {
         this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
     }
 
     @Override
@@ -37,6 +25,11 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return user.getUserId();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(user.getUserAuth().toString()));
     }
 
     @Override
@@ -58,4 +51,5 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
