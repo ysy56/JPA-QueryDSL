@@ -20,15 +20,16 @@ public class MenuController {
     /**
      * 가게 전체 메뉴 조회 기능
      *
-     * @param storeId    : 메뉴를 등록 할 가게의 Id
+     * @param storeId : 메뉴를 등록 할 가게의 Id
      * @return : 등록 된 가게 메뉴의 정보
      */
     @GetMapping("/stores/{storeId}/menus")
     public ResponseEntity<DataCommonResponse<List<AdminMenuResponseDto>>> getStoreMenu(
         @PathVariable Long storeId
-    ){
+    ) {
         List<AdminMenuResponseDto> storeMenu = menuService.getStoreMenu(storeId);
-        DataCommonResponse<List<AdminMenuResponseDto>> response = new DataCommonResponse<>(200,"가게 전체 메뉴 조회 성공",storeMenu);
+        DataCommonResponse<List<AdminMenuResponseDto>> response = new DataCommonResponse<>(200,
+            "가게 전체 메뉴 조회 성공", storeMenu);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

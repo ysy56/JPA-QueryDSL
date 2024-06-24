@@ -22,9 +22,10 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
 
-    public ReviewResponseDto createReview(ReviewRequestDto reviewRequestDto, Long storeId, User user) {
+    public ReviewResponseDto createReview(ReviewRequestDto reviewRequestDto, Long storeId,
+        User user) {
         Store store = findStore(storeId);
-        Review review = reviewRepository.save(new Review(reviewRequestDto,store,user));
+        Review review = reviewRepository.save(new Review(reviewRequestDto, store, user));
         return new ReviewResponseDto(review);
     }
 
@@ -39,7 +40,8 @@ public class ReviewService {
         return reviews.stream().map(ReviewResponseDto::new).collect(Collectors.toList());
     }
 
-    public ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto reviewRequestDto, User user) {
+    public ReviewResponseDto updateReview(Long storeId, Long reviewId,
+        ReviewRequestDto reviewRequestDto, User user) {
         findStore(storeId);
         Review review = findReview(reviewId);
 
@@ -47,7 +49,7 @@ public class ReviewService {
             throw new IllegalStateException("수정 권한이 없습니다.");
         }
 
-        if(review.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(1))) {
+        if (review.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(1))) {
             throw new ForbiddenException("댓글 수정 기간이 지났습니다.");
         }
 
