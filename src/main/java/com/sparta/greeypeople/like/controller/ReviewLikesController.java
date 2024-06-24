@@ -47,7 +47,7 @@ public class ReviewLikesController {
     public ResponseEntity<StatusCommonResponse> removeReviewLike(@PathVariable Long reviewLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewLikesService.removeReviewLike(reviewLikeId, userDetails.getUser());
         StatusCommonResponse commonResponse = new StatusCommonResponse(204, "리뷰 좋아요 삭제 성공");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
     }
 
 }
