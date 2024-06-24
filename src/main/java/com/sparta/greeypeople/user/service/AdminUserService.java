@@ -45,12 +45,16 @@ public class AdminUserService {
     @Transactional
     public void updateUserAuth(Long userId, AdminUserAuthRequestDto requestDto) {
         User user = findUser(userId);
+        String getUserAuth = user.getUserAuth().toString();
 
-        if (user.getUserAuth().equals(requestDto.getUserAuth())) {
+        if (getUserAuth.equals(requestDto.getUserAuth())) {
             throw new ConflictException("해당 사용자의 변경하려고 하는 권한과 현재의 권한이 같습니다.");
         }
 
-        UserAuth userAuth = requestDto.getUserAuth();
+        UserAuth userAuth = UserAuth.USER;
+        if (requestDto.getUserAuth().equals("ADMIN")){
+            userAuth = UserAuth.ADMIN;
+        }
 
         user.updateAuth(userAuth);
     }
