@@ -3,6 +3,7 @@ package com.sparta.greeypeople.user.entity;
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.common.TimeStamp;
+import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
@@ -79,6 +80,15 @@ public class User extends TimeStamp {
         this.kakaoId =kakaoId;
     }
 
+    public void updateProfile(AdminUserProfileRequestDto requestDto) {
+        this.userName = requestDto.getUserName();
+        this.intro = requestDto.getIntro();
+    }
+
+    public void updateAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
+    }
+
     public void updateUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
     }
@@ -95,4 +105,5 @@ public class User extends TimeStamp {
         this.kakaoId = kakaoId;
         return this;
     }
+
 }
