@@ -7,10 +7,10 @@ import com.sparta.greeypeople.follow.dto.AdminFollowResponseDto;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +19,8 @@ public class AdminFollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
-
-    public List<AdminFollowResponseDto> selectStoreAllFollower(Long storeId) {
+    @Transactional(readOnly = true)
+    public List<AdminFollowResponseDto> findStoreAllFollower(Long storeId) {
         List<Follow> followerList = findFollowerList(storeId);
         List<AdminFollowResponseDto> responseList = new ArrayList<>();
 
@@ -40,4 +40,5 @@ public class AdminFollowService {
     public List<Follow> findFollowerList(Long storeId) {
         return followRepository.findAllByStoreId(storeId).stream().toList();
     }
+
 }

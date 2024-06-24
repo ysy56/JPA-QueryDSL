@@ -1,5 +1,7 @@
-package com.sparta.greeypeople.like.menu;
+package com.sparta.greeypeople.like.service;
 
+import com.sparta.greeypeople.like.entity.MenuLikes;
+import com.sparta.greeypeople.like.repository.MenuLikesRepository;
 import com.sparta.greeypeople.menu.repository.MenuRepository;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;

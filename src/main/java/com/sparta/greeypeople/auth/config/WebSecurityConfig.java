@@ -4,6 +4,7 @@ import com.sparta.greeypeople.auth.filter.JwtAuthenticationFilter;
 import com.sparta.greeypeople.auth.filter.JwtAuthorizationFilter;
 import com.sparta.greeypeople.auth.security.UserDetailsServiceImpl;
 import com.sparta.greeypeople.auth.util.JwtUtil;
+import com.sparta.greeypeople.user.repository.BlockedUserRepository;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +27,16 @@ public class WebSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserRepository userRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
-    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration, UserRepository userRepository) {
+    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationConfiguration authenticationConfiguration, UserRepository userRepository,
+        BlockedUserRepository blockedUserRepository) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
         this.userRepository = userRepository;
         // this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.blockedUserRepository = blockedUserRepository;
     }
 
     @Bean
@@ -42,7 +46,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository, blockedUserRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
 
         return filter;

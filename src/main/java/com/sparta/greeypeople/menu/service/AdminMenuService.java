@@ -24,7 +24,8 @@ public class AdminMenuService {
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
 
-    public AdminMenuResponseDto saveMenu(Long storeId, AdminMenuSaveRequestDto requestDto) {
+    @Transactional
+    public AdminMenuResponseDto createMenu(Long storeId, AdminMenuSaveRequestDto requestDto) {
         User user = findUser();
         Store store = findStore(storeId);
 
@@ -47,6 +48,7 @@ public class AdminMenuService {
         return new AdminMenuResponseDto(menu);
     }
 
+    @Transactional
     public void deleteMenu(Long storeId, Long menuId) {
         Store store = findStore(storeId);
         Menu menu = findMenu(menuId);
