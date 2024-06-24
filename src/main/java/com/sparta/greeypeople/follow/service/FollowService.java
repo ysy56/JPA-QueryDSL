@@ -4,12 +4,12 @@ import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ViolatedException;
 import com.sparta.greeypeople.follow.entity.Follow;
 import com.sparta.greeypeople.follow.repository.FollowRepository;
-import com.sparta.greeypeople.menu.entity.Menu;
+import com.sparta.greeypeople.menu.dto.response.MenuResponseDto;
+import com.sparta.greeypeople.menu.repository.MenuRepository;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+    private final MenuRepository menuRepository;
 
     @Transactional
     public void followStore(Long storeId, User user) {
@@ -47,16 +48,14 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public List<Menu> getMenusFromFollowedStores(User user) {
-        // 팔로우한 가게들의 목록 가져오기
-        List<Store> followedStores = followRepository.findFollowedStoresByUser(user);
+    public List<MenuResponseDto> getMenusFromFollowedStores(User user) {
+        User validatedUser = validateUser(user);
 
-        // 각 가게별 메뉴 조회 및 최신순 정렬
-        List<Menu> menus = new ArrayList<>();
-        for (Store store : followedStores) {
-            List<Menu> storeMenus = storeRepository.findMenusByIdOrderByCreatedAtDesc(store.getId());
-            menus.addAll(storeMenus);
-        }
+        // 팔로우한 가게들의 ID 목록 가져오기
+        List<Long> followedStoreIds = followRepository.findFollowedStoreIdsByUser(validatedUser);
+
+        // 팔로우한 모든 가게의 메뉴를 최신순으로 정렬하여 가져오기
+        List<MenuResponseDto> menus = menuRepository.findMenusFromFollowedStoresOrderByCreatedAtDesc(followedStoreIds);
 
         return menus;
     }
