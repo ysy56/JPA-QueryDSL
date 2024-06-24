@@ -25,12 +25,10 @@ public class FollowService {
 
     @Transactional
     public void followStore(Long storeId, User user) {
-        User foundUser = userRepository.findById(user.getId()).orElseThrow(() ->
-            new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
-        Store foundStore = storeRepository.findById(storeId).orElseThrow(() ->
-            new DataNotFoundException("해당 스토어를 찾을 수 없습니다."));
+        User foundUser = validateUser(user);
+        Store foundStore = validateStore(storeId);
 
-        if (followRepository.findByUserAndStore(user, foundStore).isPresent()) {
+        if (followRepository.findByUserAndStore(foundUser, foundStore).isPresent()) {
             throw new ViolatedException("이미 팔로우한 스토어입니다.");
         }
 
@@ -39,10 +37,8 @@ public class FollowService {
 
     @Transactional
     public void unfollowStore(Long storeId, User user) {
-        User foundUser = userRepository.findById(user.getId()).orElseThrow(() ->
-            new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
-        Store foundStore = storeRepository.findById(storeId).orElseThrow(() ->
-            new DataNotFoundException("해당 스토어가 존재하지 않습니다."));
+        User foundUser = validateUser(user);
+        Store foundStore = validateStore(storeId);
 
         Follow follow = followRepository.findByUserAndStore(foundUser, foundStore).orElseThrow(() ->
             new DataNotFoundException("팔로우 관계가 존재하지 않습니다."));
@@ -65,4 +61,13 @@ public class FollowService {
         return menus;
     }
 
+    private User validateUser(User user) {
+        return userRepository.findById(user.getId()).orElseThrow(() ->
+            new DataNotFoundException("해당 사용자가 존재하지 않습니다."));
+    }
+
+    private Store validateStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(() ->
+            new DataNotFoundException("해당 스토어가 존재하지 않습니다."));
+    }
 }
