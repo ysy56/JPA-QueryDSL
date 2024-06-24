@@ -1,5 +1,6 @@
-package com.sparta.greeypeople.like.review;
+package com.sparta.greeypeople.like.repository;
 
+import com.sparta.greeypeople.like.entity.ReviewLikes;
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.user.entity.User;
 import java.util.Optional;

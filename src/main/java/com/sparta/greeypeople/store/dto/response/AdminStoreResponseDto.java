@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class AdminStoreResponseDto {
+
     private String storeName;
     private String intro;
 

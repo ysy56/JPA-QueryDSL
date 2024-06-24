@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.like.review;
+package com.sparta.greeypeople.like.entity;
 
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.common.TimeStamp;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "ReviewLikes_table")
+@Table(name = "review_likes_table")
 @NoArgsConstructor
 public class ReviewLikes extends TimeStamp {
     @Id

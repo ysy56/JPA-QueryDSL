@@ -1,5 +1,6 @@
-package com.sparta.greeypeople.like.menu;
+package com.sparta.greeypeople.like.repository;
 
+import com.sparta.greeypeople.like.entity.MenuLikes;
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.user.entity.User;
 import java.util.Optional;

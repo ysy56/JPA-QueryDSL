@@ -30,7 +30,7 @@ public class Review extends TimeStamp {
     private Store store;
 
     @Column
-    private Long reviewLikes;
+    private Long reviewLikes = 0L;
 
     public void addLike() {
         this.reviewLikes = reviewLikes + 1L;

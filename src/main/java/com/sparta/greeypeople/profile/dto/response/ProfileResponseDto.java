@@ -1,21 +1,25 @@
-package com.sparta.greeypeople.user.dto.response;
+package com.sparta.greeypeople.profile.dto.response;
 
 import com.sparta.greeypeople.user.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+/**
+ * ProfileResponseDto는 사용자 프로필 정보를 담고 있는 데이터 전송 객체
+ */
 @Getter
-@NoArgsConstructor
-public class AdminUserResponseDto {
+@AllArgsConstructor
+public class ProfileResponseDto {
 
     private String userId;
+
     private String userName;
+
     private String intro;
 
-    public AdminUserResponseDto(User user) {
+    public ProfileResponseDto(User user) {
         this.userId = user.getUserId();
         this.userName = user.getUserName();
         this.intro = user.getIntro();
     }
-
 }
