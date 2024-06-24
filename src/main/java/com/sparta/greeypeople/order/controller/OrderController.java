@@ -6,11 +6,14 @@ import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.order.dto.request.OrderRequestDto;
 import com.sparta.greeypeople.order.dto.response.OrderResponseDto;
 import com.sparta.greeypeople.order.service.OrderService;
+import java.util.List;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @PostMapping("/stores/{stordId}/order")
+    @PostMapping("/stores/{storeId}/order")
     public ResponseEntity<DataCommonResponse<OrderResponseDto>>createOrder(
-        @PathVariable Long stordId,
+        @PathVariable Long storeId,
         @RequestBody OrderRequestDto orderRequest,
         @AuthenticationPrincipal UserDetailsImpl userDetails){
-        OrderResponseDto responseDto = orderService.createOrder(stordId, orderRequest, userDetails.getUser());
+        OrderResponseDto responseDto = orderService.createOrder(storeId, orderRequest, userDetails.getUser());
         DataCommonResponse<OrderResponseDto> response = new DataCommonResponse<>(201,"주문 작성 성공", responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -45,21 +48,16 @@ public class OrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-//    @GetMapping("/orders")
-//    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(){
-//        List<OrderResponseDto> orders = orderService.getAllOrder();
-//        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
-
+    @Transactional(readOnly = true)
     @GetMapping("/orders")
-    public ResponseEntity<DataCommonResponse<Page<OrderResponseDto>>>getAllOrder(
-        @RequestParam("page") int page,
-        @RequestParam("sortBy") String sortBy,
-        @RequestParam("isAsc") boolean isAsc
+    public ResponseEntity<DataCommonResponse<List<OrderResponseDto>>>getAllOrder(
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+        @RequestParam(value = "isAsc", defaultValue = "true") boolean isAsc
     ){
-        Page<OrderResponseDto> orders = orderService.getAllOrder(page -1,sortBy,isAsc);
-        DataCommonResponse<Page<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
+        Page<OrderResponseDto> ordersPage = orderService.getAllOrder(page,sortBy,isAsc);
+        List<OrderResponseDto> orders = ordersPage.getContent();
+        DataCommonResponse<List<OrderResponseDto>> response = new DataCommonResponse<>(200, "주문 전체 조회 성공", orders);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
@@ -80,7 +78,7 @@ public class OrderController {
         @PathVariable Long orderId,
         @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.deleteOrder(orderId, userDetails.getUser());
-        StatusCommonResponse response = new StatusCommonResponse(200,"리뷰 삭제 성공");
+        StatusCommonResponse response = new StatusCommonResponse(200,"주문 취소 성공");
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
