@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.like.menu;
+package com.sparta.greeypeople.like.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.common.TimeStamp;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "menuLikes_table")
+@Table(name = "menu_likes_table")
 @NoArgsConstructor
 public class MenuLikes extends TimeStamp {
 	@Id

@@ -1,6 +1,7 @@
-package com.sparta.greeypeople.like.review;
+package com.sparta.greeypeople.like.controller;
 
 import com.sparta.greeypeople.auth.security.UserDetailsImpl;
+import com.sparta.greeypeople.like.service.ReviewLikesService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;

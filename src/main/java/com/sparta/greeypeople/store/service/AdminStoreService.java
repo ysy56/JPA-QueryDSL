@@ -6,9 +6,9 @@ import com.sparta.greeypeople.store.dto.request.AdminStoreUpdateRequestDto;
 import com.sparta.greeypeople.store.dto.response.AdminStoreResponseDto;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +16,8 @@ public class AdminStoreService {
 
     private final StoreRepository storeRepository;
 
-    public AdminStoreResponseDto saveStore(AdminStoreSaveRequestDto requestDto) {
+
+    public AdminStoreResponseDto createStore(AdminStoreSaveRequestDto requestDto) {
         Store store = storeRepository.save(new Store(requestDto));
 
         return new AdminStoreResponseDto(store);
@@ -31,6 +32,7 @@ public class AdminStoreService {
         return new AdminStoreResponseDto(store);
     }
 
+    @Transactional
     public void deleteStore(Long storeId) {
         Store store = findStore(storeId);
 
@@ -39,7 +41,7 @@ public class AdminStoreService {
 
     public Store findStore(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(
-                () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
+            () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
         );
     }
 
