@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.follow;
+package com.sparta.greeypeople.follow.entity;
 
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.common.TimeStamp;

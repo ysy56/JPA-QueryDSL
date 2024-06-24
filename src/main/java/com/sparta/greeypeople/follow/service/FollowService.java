@@ -1,7 +1,9 @@
-package com.sparta.greeypeople.follow;
+package com.sparta.greeypeople.follow.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.exception.ViolatedException;
+import com.sparta.greeypeople.follow.entity.Follow;
+import com.sparta.greeypeople.follow.repository.FollowRepository;
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;

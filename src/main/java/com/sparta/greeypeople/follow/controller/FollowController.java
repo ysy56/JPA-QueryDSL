@@ -1,8 +1,9 @@
-package com.sparta.greeypeople.follow;
+package com.sparta.greeypeople.follow.controller;
 
 import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.common.DataCommonResponse;
 import com.sparta.greeypeople.common.StatusCommonResponse;
+import com.sparta.greeypeople.follow.service.FollowService;
 import com.sparta.greeypeople.menu.entity.Menu;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

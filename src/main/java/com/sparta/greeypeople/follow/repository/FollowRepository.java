@@ -1,8 +1,8 @@
-package com.sparta.greeypeople.follow;
+package com.sparta.greeypeople.follow.repository;
 
+import com.sparta.greeypeople.follow.entity.Follow;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.store.entity.Store;
-import java.util.Collection;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
