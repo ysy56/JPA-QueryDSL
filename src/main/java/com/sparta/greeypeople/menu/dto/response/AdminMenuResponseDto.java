@@ -12,7 +12,7 @@ public class AdminMenuResponseDto {
     private int price;
 
     public AdminMenuResponseDto(Menu menu) {
-        this.menuName = menu.getMenu();
+        this.menuName = menu.getMenuName();
         this.price = menu.getPrice();
     }
 

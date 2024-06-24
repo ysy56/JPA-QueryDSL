@@ -21,8 +21,8 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "menu", length = 50, nullable = false)
-    private String menu;
+    @Column(name = "menu_name", length = 50, nullable = false)
+    private String menuName;
 
     @Column(name = "price", nullable = false)
     private Integer price;
@@ -42,14 +42,14 @@ public class Menu {
     private Long menuLikes = 0L;
 
     public Menu(AdminMenuSaveRequestDto requestDto, User user, Store store) {
-        this.menu = requestDto.getMenuName();
+        this.menuName = requestDto.getMenuName();
         this.price = requestDto.getPrice();
         this.user = user;
         this.store = store;
     }
 
     public void update(AdminMenuUpdateRequestDto requestDto) {
-        this.menu = requestDto.getMenuName();
+        this.menuName = requestDto.getMenuName();
         this.price = requestDto.getPrice();
     }
 
