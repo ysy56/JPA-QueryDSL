@@ -6,6 +6,7 @@ import com.sparta.greeypeople.profile.dto.request.ProfileRequestDto;
 import com.sparta.greeypeople.profile.dto.response.ProfileResponseDto;
 import com.sparta.greeypeople.profile.service.ProfileService;
 import com.sparta.greeypeople.common.StatusCommonResponse;
+import com.sparta.greeypeople.common.DataCommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,20 +26,20 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping
-    public ResponseEntity<StatusCommonResponse<ProfileResponseDto>> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<DataCommonResponse<ProfileResponseDto>> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         ProfileResponseDto responseDto = profileService.getProfile(userDetails.getUser());
-        return ResponseEntity.ok(new StatusCommonResponse<>(200, "마이페이지 조회 성공", responseDto));
+        return ResponseEntity.ok(new DataCommonResponse<>(200, "마이페이지 조회 성공", responseDto));
     }
 
     @PutMapping
-    public ResponseEntity<StatusCommonResponse<ProfileResponseDto>> updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ProfileRequestDto requestDto) {
+    public ResponseEntity<DataCommonResponse<ProfileResponseDto>> updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ProfileRequestDto requestDto) {
         ProfileResponseDto responseDto = profileService.updateProfile(userDetails.getUser(), requestDto);
-        return ResponseEntity.ok(new StatusCommonResponse<>(200, "마이페이지 수정 성공", responseDto));
+        return ResponseEntity.ok(new DataCommonResponse<>(200, "마이페이지 수정 성공", responseDto));
     }
 
     @PutMapping("/password")
-    public ResponseEntity<StatusCommonResponse<String>> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PasswordUpdateRequestDto requestDto) {
+    public ResponseEntity<StatusCommonResponse> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody PasswordUpdateRequestDto requestDto) {
         profileService.updatePassword(userDetails.getUser(), requestDto);
-        return ResponseEntity.ok(new StatusCommonResponse<>(200, "비밀번호 수정 성공"));
+        return ResponseEntity.ok(new StatusCommonResponse(200, "비밀번호 수정 성공"));
     }
 }
