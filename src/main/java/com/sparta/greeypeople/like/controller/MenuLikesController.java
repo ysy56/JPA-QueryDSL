@@ -24,12 +24,13 @@ public class MenuLikesController {
 	/**
 	 * 좋아요 등록 기능
 	 *
+	 * @param storeId    : 가게 ID
 	 * @param menuId      : 좋아요 등록 할 메뉴의 Id
 	 * @return : 좋아요 등록 메시지 상태 코드 반환
 	 */
 	@PostMapping("/{menuId}/like")
-	public ResponseEntity<StatusCommonResponse> addMenuLike(@PathVariable Long menuId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		menuLikesService.addMenuLike(menuId, userDetails.getUser());
+	public ResponseEntity<StatusCommonResponse> addMenuLike(@PathVariable Long storeId, @PathVariable Long menuId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+		menuLikesService.addMenuLike(storeId, menuId, userDetails.getUser());
 		StatusCommonResponse commonResponse = new StatusCommonResponse(201, "메뉴 좋아요 등록 성공");
 		return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
 	}
@@ -37,14 +38,15 @@ public class MenuLikesController {
 	/**
 	 * 좋아요 삭제 기능
 	 *
+	 * @param storeId    : 가게 ID
 	 * @param menuLikeId      : 좋아요 삭제 할 메뉴의 좋아요 Id
 	 * @return : 좋아요 삭제 메시지 상태 코드 반환
 	 */
 	@DeleteMapping("/{menuLikeId}/like")
-	public ResponseEntity<StatusCommonResponse> removeMenuLike(@PathVariable Long menuLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		menuLikesService.removeMenuLike(menuLikeId, userDetails.getUser());
+	public ResponseEntity<StatusCommonResponse> removeMenuLike(@PathVariable Long storeId, @PathVariable Long menuLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+		menuLikesService.removeMenuLike(storeId, menuLikeId, userDetails.getUser());
 		StatusCommonResponse commonResponse = new StatusCommonResponse(204, "메뉴 좋아요 삭제 성공");
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
+		return new ResponseEntity<>(commonResponse, HttpStatus.OK);
 	}
 
 }
