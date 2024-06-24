@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.like.review;
+package com.sparta.greeypeople.like.entity;
 
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.common.TimeStamp;

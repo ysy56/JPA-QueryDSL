@@ -1,4 +1,4 @@
-package com.sparta.greeypeople.like.menu;
+package com.sparta.greeypeople.like.entity;
 
 import com.sparta.greeypeople.menu.entity.Menu;
 import com.sparta.greeypeople.common.TimeStamp;
