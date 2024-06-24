@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 public class OrderResponseDto {
+
     private final String storeName;
     private final List<AdminMenuResponseDto> menuList;
 

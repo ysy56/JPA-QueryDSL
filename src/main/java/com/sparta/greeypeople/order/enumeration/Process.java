@@ -12,8 +12,4 @@ public enum Process {
     Process(String process) {
         this.process = process;
     }
-
-    public String getProcess() {
-        return this.process;
-    }
 }

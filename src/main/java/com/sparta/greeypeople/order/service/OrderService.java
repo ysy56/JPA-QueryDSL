@@ -10,7 +10,6 @@ import com.sparta.greeypeople.order.dto.response.OrderResponseDto;
 import com.sparta.greeypeople.order.entity.Order;
 import com.sparta.greeypeople.order.entity.OrderMenu;
 import com.sparta.greeypeople.order.enumeration.Process;
-import com.sparta.greeypeople.order.repository.OrderMenuRepository;
 import com.sparta.greeypeople.order.repository.OrderRepository;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
@@ -28,16 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
     private final OrderRepository orderRepository;
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
 
-    //주문 등록
     @Transactional
     public OrderResponseDto createOrder(Long storeId, OrderRequestDto orderRequest, User user) {
-        Store store = storeRepository.findById(storeId).orElseThrow(
-            () -> new DataNotFoundException("해당 가게는 존재하지 않습니다")
-        );
+        Store store = findStore(storeId);
         Process process = Process.COMPLETED;
 
         List<Long> ids = orderRequest.getMenuList().stream()
@@ -59,15 +56,12 @@ public class OrderService {
         return new OrderResponseDto(savedOrder);
     }
 
-    //주문 단건 조회
     public OrderResponseDto getOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
+
         return new OrderResponseDto(order);
     }
 
-    //전체 조회
     @Transactional(readOnly = true)
     public Page<OrderResponseDto> getAllOrder(int page, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -77,12 +71,10 @@ public class OrderService {
         return orderList.map(OrderResponseDto::new);
     }
 
-    //주문 수정
     @Transactional
     public OrderResponseDto updateOrdeer(Long orderId, OrderRequestDto orderRequest, User user) {
-       Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
+
         if (!order.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("수정 권한이 없습니다.");
         }
@@ -102,16 +94,26 @@ public class OrderService {
         return new OrderResponseDto(savedOrder);
     }
 
-    //주문 삭제
     public void deleteOrder(Long orderId, User user) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new DataNotFoundException("해당 주문은 존재하지 않습니다")
-        );
+        Order order = findOrder(orderId);
         if (!order.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("삭제 권한이 없습니다.");
         }
 //        Process process = Process.CANCELED;
         orderRepository.delete(order);
     }
+
+    public Store findStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(
+            () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
+        );
+    }
+
+    public Order findOrder(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
+            () -> new DataNotFoundException("조회된 주문 정보가 없습니다")
+        );
+    }
+
 }
 

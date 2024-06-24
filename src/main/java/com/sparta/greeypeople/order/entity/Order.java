@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "order_table")
 @NoArgsConstructor
 public class Order extends TimeStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +46,7 @@ public class Order extends TimeStamp {
         orderMenus.add(orderMenu);
         orderMenu.setOrder(this);
     }
+
     public void update(List<OrderMenu> newOrderMenus) {
         this.orderMenus.clear();
         for (OrderMenu orderMenu : newOrderMenus) {

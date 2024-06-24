@@ -13,11 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "review")
 public class Review extends TimeStamp {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "content", length=600, nullable = false)
+    @Column(name = "content", length = 600, nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,6 +45,7 @@ public class Review extends TimeStamp {
         this.store = store;
         this.user = user;
     }
+
     public void update(ReviewRequestDto reviewRequestDto) {
         this.content = reviewRequestDto.getContent();
     }

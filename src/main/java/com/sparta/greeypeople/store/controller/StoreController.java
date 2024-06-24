@@ -17,7 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
     private final StoreService storeService;
 
-    //가게 단건 조회
+    /**
+     * 가게 단건 조회 기능
+     *
+     * @param storeId    : 리뷰 등록된 가게의 Id
+     * @return : 등록된 가게 정보
+     */
     @GetMapping("/stores/{storeId}")
     public ResponseEntity<DataCommonResponse<AdminStoreResponseDto>> getStore(
         @PathVariable Long storeId
@@ -27,8 +32,11 @@ public class StoreController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-    //가게 전체 조회
+    /**
+     * 가게 전체 조회 기능
+     *
+     * @return : 등록된 가게 정보
+     */
     @GetMapping("/stores")
     public ResponseEntity<DataCommonResponse<List<AdminStoreResponseDto>>> getAllStore(){
         List<AdminStoreResponseDto> stores = storeService.getAllStore();

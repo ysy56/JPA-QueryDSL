@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class ReviewResponseDto {
+
     private final String content;
     private final LocalDateTime updateAt;
 
