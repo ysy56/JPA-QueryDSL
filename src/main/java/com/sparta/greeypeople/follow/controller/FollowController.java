@@ -27,7 +27,8 @@ public class FollowController {
     @DeleteMapping("/stores/{storeId}/follow")
     public ResponseEntity<StatusCommonResponse> unfollowStore(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         followService.unfollowStore(storeId, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new StatusCommonResponse(204, "스토어 언팔로우 성공"));
+        StatusCommonResponse commonResponse = new StatusCommonResponse(204, "스토어 언팔로우 성공");
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
     }
 
     @GetMapping("/stores/follow/menus")
