@@ -4,6 +4,7 @@ import com.sparta.greeypeople.common.DataCommonResponse;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
 import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
+import com.sparta.greeypeople.user.dto.request.BlockUserRequestDto;
 import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
 import com.sparta.greeypeople.user.service.AdminUserService;
 import jakarta.validation.Valid;
@@ -88,4 +89,19 @@ public class AdminUserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     * 특정 회원 차단 ( 인가 필요 )
+     *
+     * @param userId : 권한을 변경할 회원의 Id
+     * @return : 차단 완료 메시지 상태 코드 반환
+     */
+    @PutMapping("/{userId}/block")
+    public ResponseEntity<StatusCommonResponse> blockUser(
+        @PathVariable Long userId,
+        @RequestBody BlockUserRequestDto requestDto
+    ) {
+        adminUserService.blockUser(userId, requestDto.getReason());
+        StatusCommonResponse response = new StatusCommonResponse(200, "회원 차단 성공");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
