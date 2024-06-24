@@ -5,9 +5,11 @@ import com.sparta.greeypeople.auth.security.UserDetailsImpl;
 import com.sparta.greeypeople.auth.util.JwtUtil;
 import com.sparta.greeypeople.common.StatusCommonResponse;
 import com.sparta.greeypeople.user.dto.request.LoginRequestDto;
+import com.sparta.greeypeople.user.entity.BlockedUser;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
 import com.sparta.greeypeople.user.enumeration.UserStatus;
+import com.sparta.greeypeople.user.repository.BlockedUserRepository;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,10 +29,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository,
+        BlockedUserRepository blockedUserRepository) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
+        this.blockedUserRepository = blockedUserRepository;
         setFilterProcessesUrl("/users/login");
     }
 
@@ -73,6 +78,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             response.setContentType("text/plain;charset=UTF-8");
             response.getWriter().write("아이디, 비밀번호를 확인해주세요.");
 
+            return;
+        }
+
+
+        Optional<BlockedUser> blockedUser = blockedUserRepository.findByUserId(user.get().getId());
+        if (blockedUser.isPresent()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("text/plain;charset=UTF-8");
+            response.getWriter().write("해당 사용자는 차단되었습니다.");
             return;
         }
 

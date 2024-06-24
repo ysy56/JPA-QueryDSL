@@ -5,8 +5,11 @@ import com.sparta.greeypeople.exception.DataNotFoundException;
 import com.sparta.greeypeople.user.dto.request.AdminUserAuthRequestDto;
 import com.sparta.greeypeople.user.dto.request.AdminUserProfileRequestDto;
 import com.sparta.greeypeople.user.dto.response.AdminUserResponseDto;
+import com.sparta.greeypeople.user.entity.BlockedUser;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.enumeration.UserAuth;
+import com.sparta.greeypeople.user.enumeration.UserStatus;
+import com.sparta.greeypeople.user.repository.BlockedUserRepository;
 import com.sparta.greeypeople.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminUserService {
 
     private final UserRepository userRepository;
+    private final BlockedUserRepository blockedUserRepository;
 
     @Transactional(readOnly = true)
     public List<AdminUserResponseDto> findAllUser() {
@@ -45,14 +49,28 @@ public class AdminUserService {
     @Transactional
     public void updateUserAuth(Long userId, AdminUserAuthRequestDto requestDto) {
         User user = findUser(userId);
+        String getUserAuth = user.getUserAuth().toString();
 
-        if (user.getUserAuth().equals(requestDto.getUserAuth())) {
+        if (getUserAuth.equals(requestDto.getUserAuth())) {
             throw new ConflictException("해당 사용자의 변경하려고 하는 권한과 현재의 권한이 같습니다.");
         }
 
-        UserAuth userAuth = requestDto.getUserAuth();
+        UserAuth userAuth = UserAuth.USER;
+        if (requestDto.getUserAuth().equals("ADMIN")){
+            userAuth = UserAuth.ADMIN;
+        }
 
         user.updateAuth(userAuth);
+    }
+
+    @Transactional
+    public void blockUser(Long userId, String reason) {
+        User user = findUser(userId);
+
+        user.updateUserStatus(UserStatus.BLOCKED);
+        BlockedUser blockedUser = new BlockedUser(user, reason);
+        blockedUserRepository.save(blockedUser);
+        userRepository.save(user);
     }
 
     public User findUser(Long userId) {
