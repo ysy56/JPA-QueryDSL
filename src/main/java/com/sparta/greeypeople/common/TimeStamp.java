@@ -18,12 +18,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class TimeStamp {
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column
+    @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 
