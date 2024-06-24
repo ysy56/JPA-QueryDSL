@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "menuLikes_table")
+@Table(name = "menu_likes_table")
 @NoArgsConstructor
 public class MenuLikes extends TimeStamp {
 	@Id
