@@ -1,8 +1,8 @@
 package com.sparta.greeypeople.follow.service;
 
 import com.sparta.greeypeople.exception.DataNotFoundException;
-import com.sparta.greeypeople.follow.Follow;
-import com.sparta.greeypeople.follow.FollowRepository;
+import com.sparta.greeypeople.follow.entity.Follow;
+import com.sparta.greeypeople.follow.repository.FollowRepository;
 import com.sparta.greeypeople.follow.dto.AdminFollowResponseDto;
 import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
