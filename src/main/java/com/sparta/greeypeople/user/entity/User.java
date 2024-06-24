@@ -76,8 +76,20 @@ public class User extends TimeStamp {
         this.refreshToken = refreshToken;
     }
 
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
     public void encryptionPassword(String password) {
         this.password = password;
+    }
+
+    public void updateUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updateIntro(String intro) {
+        this.intro = intro;
     }
 
     public void updateProfile(AdminUserProfileRequestDto requestDto) {

@@ -101,4 +101,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    /**
+     * 입력된 값이 유효하지 않은 경우
+     * @param ex : InvalidEnteredException[custom]
+     * @return : error message, HttpStatus.BAD_REQUEST => 400
+     */
+    @ExceptionHandler(InvalidEnteredException.class)
+    public ResponseEntity<String> invalidEnteredException(InvalidEnteredException ex) {
+        log.error("{}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
