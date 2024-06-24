@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.menu.entity;
 
+import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuSaveRequestDto;
 import com.sparta.greeypeople.menu.dto.request.AdminMenuUpdateRequestDto;
 import com.sparta.greeypeople.order.entity.OrderMenu;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "menu")
 @NoArgsConstructor
-public class Menu {
+public class Menu extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
