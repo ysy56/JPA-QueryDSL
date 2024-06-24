@@ -71,7 +71,7 @@ public class AdminStoreController {
         @Min(1) @PathVariable Long storeId
     ) {
         adminStoreService.deleteStore(storeId);
-        StatusCommonResponse response = new StatusCommonResponse(204, "가게 수정 성공");
+        StatusCommonResponse response = new StatusCommonResponse(204, "가게 삭제 성공");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
