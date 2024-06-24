@@ -60,6 +60,11 @@ public class User extends TimeStamp {
 
     private Long kakaoId;
 
+    @ElementCollection(fetch = FetchType.EAGER) // FetchType 설정 추가
+    @CollectionTable(name = "past_passwords", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "password")
+    private List<String> pastPasswords = new ArrayList<>();
+
     public User(SignupRequestDto requestDto, UserStatus userStatus, UserAuth userAuth) {
         this.userId = requestDto.getUserId();
         this.password = requestDto.getPassword();
@@ -68,6 +73,7 @@ public class User extends TimeStamp {
         this.intro = requestDto.getIntro();
         this.userStatus = userStatus;
         this.userAuth = userAuth;
+        this.pastPasswords.add(this.password);
     }
 
     public User(String userId, String password, String userName, String email, UserStatus userStatus, UserAuth userAuth, Long kakaoId) {
@@ -77,7 +83,36 @@ public class User extends TimeStamp {
         this.email = email;
         this.userStatus = userStatus;
         this.userAuth = userAuth;
-        this.kakaoId =kakaoId;
+        this.kakaoId = kakaoId;
+        this.pastPasswords.add(this.password);
+    }
+
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void updatePassword(String newPassword) {
+        if (this.pastPasswords.size() >= 3) {
+            this.pastPasswords.remove(0);
+        }
+        this.pastPasswords.add(newPassword);
+        this.password = newPassword;
+    }
+
+    public void encryptionPassword(String password) {
+        this.password = password;
+    }
+
+    public void updateUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updateIntro(String intro) {
+        this.intro = intro;
     }
 
     public void updateProfile(AdminUserProfileRequestDto requestDto) {
@@ -89,21 +124,8 @@ public class User extends TimeStamp {
         this.userAuth = userAuth;
     }
 
-    public void updateUserStatus(UserStatus userStatus) {
-        this.userStatus = userStatus;
-    }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public void encryptionPassword(String password) {
-        this.password = password;
-    }
-
     public User kakaoIdUpdate(Long kakaoId) {
         this.kakaoId = kakaoId;
         return this;
     }
-
 }
