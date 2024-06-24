@@ -30,8 +30,8 @@ public class ReviewLikesController {
      * @return : 좋아요 등록 메시지 상태 코드 반환
      */
     @PostMapping("/{reviewId}/like")
-    public ResponseEntity<StatusCommonResponse> addReviewLike(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        reviewLikesService.addReviewLike(reviewId, userDetails.getUser());
+    public ResponseEntity<StatusCommonResponse> addReviewLike(@PathVariable Long storeId, @PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reviewLikesService.addReviewLike(storeId, reviewId, userDetails.getUser());
         StatusCommonResponse commonResponse = new StatusCommonResponse(201, "리뷰 좋아요 등록 성공");
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
@@ -44,8 +44,8 @@ public class ReviewLikesController {
      * @return : 좋아요 삭제 메시지 상태 코드 반환
      */
     @DeleteMapping("/{reviewLikeId}/like")
-    public ResponseEntity<StatusCommonResponse> removeReviewLike(@PathVariable Long reviewLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        reviewLikesService.removeReviewLike(reviewLikeId, userDetails.getUser());
+    public ResponseEntity<StatusCommonResponse> removeReviewLike(@PathVariable Long storeId, @PathVariable Long reviewLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reviewLikesService.removeReviewLike(storeId, reviewLikeId, userDetails.getUser());
         StatusCommonResponse commonResponse = new StatusCommonResponse(204, "리뷰 좋아요 삭제 성공");
         return new ResponseEntity<>(commonResponse, HttpStatus.OK);
     }
