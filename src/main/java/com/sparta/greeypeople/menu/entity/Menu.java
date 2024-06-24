@@ -39,7 +39,7 @@ public class Menu {
     private List<OrderMenu> orderMenus = new ArrayList<>();
 
     @Column
-    private Long menuLikes;
+    private Long menuLikes = 0L;
 
     public Menu(AdminMenuSaveRequestDto requestDto, User user, Store store) {
         this.menu = requestDto.getMenuName();
