@@ -22,30 +22,32 @@ public class ReviewLikesController {
 
     private final ReviewLikesService reviewLikesService;
 
+
+    /**
+     * 좋아요 등록 기능
+     *
+     * @param reviewId      : 좋아요 등록 할 리뷰의 Id
+     * @return : 좋아요 등록 메시지 상태 코드 반환
+     */
     @PostMapping("/{reviewId}/like")
     public ResponseEntity<StatusCommonResponse> addReviewLike(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        try {
-            reviewLikesService.addReviewLike(reviewId, userDetails.getUser());
-            StatusCommonResponse commonResponse = new StatusCommonResponse(201, "리뷰 좋아요 등록 성공");
-            return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
-        } catch (BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StatusCommonResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage()));
-        } catch (ViolatedException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new StatusCommonResponse(HttpStatus.CONFLICT.value(), e.getMessage()));
-        }
+        reviewLikesService.addReviewLike(reviewId, userDetails.getUser());
+        StatusCommonResponse commonResponse = new StatusCommonResponse(201, "리뷰 좋아요 등록 성공");
+        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
+
+    /**
+     * 좋아요 삭제 기능
+     *
+     * @param reviewLikeId      : 좋아요 삭제 할 리뷰의 좋아요 Id
+     * @return : 좋아요 삭제 메시지 상태 코드 반환
+     */
     @DeleteMapping("/{reviewLikeId}/like")
     public ResponseEntity<StatusCommonResponse> removeReviewLike(@PathVariable Long reviewLikeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        try {
-            reviewLikesService.removeReviewLike(reviewLikeId, userDetails.getUser());
-            StatusCommonResponse commonResponse = new StatusCommonResponse(204, "리뷰 좋아요 삭제 성공");
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusCommonResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
-        } catch (ForbiddenException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new StatusCommonResponse(HttpStatus.FORBIDDEN.value(), e.getMessage()));
-        }
+        reviewLikesService.removeReviewLike(reviewLikeId, userDetails.getUser());
+        StatusCommonResponse commonResponse = new StatusCommonResponse(204, "리뷰 좋아요 삭제 성공");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(commonResponse);
     }
 
 }
