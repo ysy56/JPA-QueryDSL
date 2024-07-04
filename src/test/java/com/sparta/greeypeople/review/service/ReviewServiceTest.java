@@ -7,6 +7,7 @@ import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.test.ReviewTest;
 import com.sparta.greeypeople.user.entity.User;
+import com.sparta.greeypeople.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +22,10 @@ import java.util.stream.Collectors;
 import static com.sparta.greeypeople.test.StoreTest.TEST_ADMIN_STORE_SAVE_REQUEST_DTO;
 import static com.sparta.greeypeople.test.StoreTest.TEST_STORE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest implements ReviewTest {
@@ -35,6 +38,9 @@ class ReviewServiceTest implements ReviewTest {
 
     @Mock
     StoreRepository storeRepository;
+
+    @Mock
+    UserRepository userRepository;
 
     @DisplayName("리뷰 생성")
     @Test
@@ -85,5 +91,23 @@ class ReviewServiceTest implements ReviewTest {
 
         // then
         assertThat(result).usingRecursiveComparison().isEqualTo(expectedReviewResponseDtos);
+    }
+
+    @DisplayName("리뷰 수정")
+    @Test
+    void updateReview() {
+        // given
+        User user = userRepository.findByUserId(TEST_USER_ID).get();
+
+        given(storeRepository.findById(anyLong())).willReturn(Optional.of(TEST_STORE)); // anyLong() == any(Long.class)
+        given(reviewRepository.findById(anyLong())).willReturn(Optional.of(TEST_REVIEW)); // eq(TEST_STORE_ID) vs anyLong() ?
+        given(reviewRepository.save(any(Review.class))).willReturn(TEST_REVIEW);
+
+        // when
+        when(TEST_REVIEW.getUser()).thenReturn(TEST_USER);
+        ReviewResponseDto result = reviewService.updateReview(TEST_STORE_ID, TEST_REVIEW_ID, TEST_REVIEW_REQUEST_DTO, user);
+
+        // then
+        assertThat(result).usingRecursiveComparison().isEqualTo(TEST_REVIEW_RESPONSE_DTO);
     }
 }
