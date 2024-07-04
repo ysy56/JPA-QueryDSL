@@ -1,6 +1,7 @@
 package com.sparta.greeypeople.review.entity;
 
 import com.sparta.greeypeople.review.dto.request.ReviewRequestDto;
+import com.sparta.greeypeople.store.dto.request.AdminStoreSaveRequestDto;
 import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.common.TimeStamp;
 import com.sparta.greeypeople.user.entity.User;

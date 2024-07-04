@@ -1,4 +1,4 @@
-package test;
+package com.sparta.greeypeople.test;
 
 import com.sparta.greeypeople.user.dto.request.SignupRequestDto;
 import com.sparta.greeypeople.user.entity.User;
@@ -24,6 +24,6 @@ public interface UserTest {
             TEST_USER_ADMINTOKEN
     );
 
-    // User TEST_USER = new User(TEST_SIGNUP_REQUEST_DTO, TEST_USER_STATUS, TEST_USER_AUTH);
+    User TEST_USER = new User(TEST_SIGNUP_REQUEST_DTO, TEST_USER_STATUS, TEST_USER_AUTH);
 
 }

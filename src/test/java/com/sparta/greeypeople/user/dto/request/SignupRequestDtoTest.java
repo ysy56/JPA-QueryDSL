@@ -7,7 +7,7 @@ import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import test.UserTest;
+import com.sparta.greeypeople.test.UserTest;
 
 import java.util.Locale;
 import java.util.Set;
