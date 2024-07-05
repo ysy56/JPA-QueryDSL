@@ -1,7 +1,6 @@
 package com.sparta.greeypeople.review.repository;
 
-import static com.sparta.greeypeople.test.ReviewTest.TEST_REVIEW;
-import static com.sparta.greeypeople.test.ReviewTest.TEST_REVIEW_REQUEST_DTO;
+import static com.sparta.greeypeople.test.ReviewTest.*;
 import static com.sparta.greeypeople.test.StoreTest.TEST_STORE;
 import static com.sparta.greeypeople.test.UserTest.TEST_USER;
 import static com.sparta.greeypeople.test.UserTest.TEST_USER_ID;
@@ -31,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles // 찾아보기
+@ActiveProfiles("test")
 class ReviewRepositoryTest {
     @Autowired
     ReviewRepository reviewRepository;
@@ -42,40 +41,33 @@ class ReviewRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() {
-        // 기존 데이터를 삭제
-        reviewRepository.deleteAll();
-        storeRepository.deleteAll();
-        userRepository.deleteAll();
-
-        // Store와 User를 먼저 저장
-        userRepository.save(TEST_USER);
-        storeRepository.save(TEST_STORE);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        userRepository.save(TEST_USER);
+//        storeRepository.save(TEST_STORE);
+//        reviewRepository.save(TEST_REVIEW);
+//    }
 
     @Test
     @DisplayName("생성일시 기준 내림차순 정렬 조회")
     void findAll(){
         // given
-        User user = userRepository.findByUserId(TEST_USER_ID).get();
-
-        Review mock1 = Mockito.mock(Review.class); // given when then 적용
-        Review mock2 = Mockito.mock(Review.class); // given when then 적용
+        userRepository.save(TEST_USER);
+        storeRepository.save(TEST_STORE);
+        reviewRepository.save(TEST_REVIEW);
+        reviewRepository.save(TEST_ANOTHER_REVIEW);
 
         // when
-        Mockito.when(mock1.getCreatedAt()).thenReturn(LocalDateTime.of(2021, 1, 1, 0, 0, 0));
-        Mockito.when(mock1.getContent()).thenReturn("content1");
-        Mockito.when(mock2.getCreatedAt()).thenReturn(LocalDateTime.of(2021, 2, 1, 0, 0, 0));
-        Mockito.when(mock2.getContent()).thenReturn("content2");
-
-        reviewRepository.save(mock1);
-        reviewRepository.save(mock2);
-
-        var resultReviewList = reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "createDate"));
+        var resultReviewList = reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // then
-        assertThat(resultReviewList.get(0)).isEqualTo(mock2);
-        assertThat(resultReviewList.get(1)).isEqualTo(mock1);
+        assertThat(resultReviewList.get(0))
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(TEST_REVIEW);
+        assertThat(resultReviewList.get(1))
+                .usingRecursiveComparison()
+                .ignoringFields("createdAt")
+                .isEqualTo(TEST_ANOTHER_REVIEW);
     }
 }
