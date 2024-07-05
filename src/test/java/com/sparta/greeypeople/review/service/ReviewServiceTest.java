@@ -3,80 +3,97 @@ package com.sparta.greeypeople.review.service;
 import com.sparta.greeypeople.review.dto.response.ReviewResponseDto;
 import com.sparta.greeypeople.review.entity.Review;
 import com.sparta.greeypeople.review.repository.ReviewRepository;
-import com.sparta.greeypeople.store.entity.Store;
 import com.sparta.greeypeople.store.repository.StoreRepository;
 import com.sparta.greeypeople.test.ReviewTest;
-import com.sparta.greeypeople.user.entity.User;
 import com.sparta.greeypeople.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static com.sparta.greeypeople.test.StoreTest.TEST_ADMIN_STORE_SAVE_REQUEST_DTO;
 import static com.sparta.greeypeople.test.StoreTest.TEST_STORE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@Transactional
+@ActiveProfiles("test")
 class ReviewServiceTest implements ReviewTest {
 
-    @InjectMocks
+    @Autowired
     ReviewService reviewService;
 
-    @Mock
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ReviewRepository reviewRepository;
 
-    @Mock
+    @Autowired
     StoreRepository storeRepository;
 
-    @Mock
-    UserRepository userRepository;
+//    @BeforeEach
+//    void setUp() {
+//        userRepository.save(TEST_USER);
+//        storeRepository.save(TEST_STORE);
+//        reviewRepository.save(TEST_REVIEW);
+//    }
 
     @DisplayName("리뷰 생성")
     @Test
     void createReview() {
         // given
-        given(storeRepository.findById(TEST_STORE_ID)).willReturn(Optional.of(TEST_STORE));
-        given(reviewRepository.save(any(Review.class))).willReturn(TEST_REVIEW);
+        storeRepository.save(TEST_STORE);
+        userRepository.save(TEST_USER);
+        reviewRepository.save(TEST_REVIEW);
 
         // when
         ReviewResponseDto result = reviewService.createReview(TEST_REVIEW_REQUEST_DTO, TEST_STORE_ID, TEST_USER);
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(TEST_REVIEW_RESPONSE_DTO);
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFields("updateAt")
+                .isEqualTo(TEST_REVIEW_RESPONSE_DTO);
     }
 
     @DisplayName("리뷰 단건 조회")
     @Test
     void getReview() {
         // given
-        given(storeRepository.findById(TEST_STORE_ID)).willReturn(Optional.of(TEST_STORE));
-        given(reviewRepository.findById(TEST_REVIEW_ID)).willReturn(Optional.of(TEST_REVIEW));
+        storeRepository.save(TEST_STORE);
+        userRepository.save(TEST_USER);
+        reviewRepository.save(TEST_REVIEW);
 
         // when
         ReviewResponseDto result = reviewService.getReview(TEST_STORE_ID, TEST_REVIEW_ID);
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(TEST_REVIEW_RESPONSE_DTO);
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFields("updateAt")
+                .isEqualTo(TEST_REVIEW_RESPONSE_DTO);
     }
 
     @DisplayName("리뷰 전체 조회")
     @Test
     void getAllReview() {
         // given
+        storeRepository.save(TEST_STORE);
+        userRepository.save(TEST_USER);
+
         Review testReview1 = new Review(TEST_REVIEW_REQUEST_DTO, TEST_STORE, TEST_USER);
         Review testReview2 = new Review(TEST_REVIEW_REQUEST_DTO, TEST_STORE, TEST_USER);
         Review testReview3 = new Review(TEST_REVIEW_REQUEST_DTO, TEST_STORE, TEST_USER);
+
+        reviewRepository.save(testReview1);
+        reviewRepository.save(testReview2);
+        reviewRepository.save(testReview3);
 
         List<ReviewResponseDto> expectedReviewResponseDtos = List.of(
                 new ReviewResponseDto(testReview1),
@@ -84,30 +101,28 @@ class ReviewServiceTest implements ReviewTest {
                 new ReviewResponseDto(testReview3)
         );
 
-        given(reviewRepository.findAllByStoreId(TEST_STORE_ID)).willReturn(List.of(testReview1, testReview2, testReview3));
-
         // when
         List<ReviewResponseDto> result = reviewService.getAllReviews(TEST_STORE_ID);
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(expectedReviewResponseDtos);
+        assertThat(result).usingRecursiveComparison().ignoringFields("updateAt").isEqualTo(expectedReviewResponseDtos);
     }
 
     @DisplayName("리뷰 수정")
     @Test
     void updateReview() {
         // given
-        User user = userRepository.findByUserId(TEST_USER_ID).get();
-
-        given(storeRepository.findById(anyLong())).willReturn(Optional.of(TEST_STORE)); // anyLong() == any(Long.class)
-        given(reviewRepository.findById(anyLong())).willReturn(Optional.of(TEST_REVIEW)); // eq(TEST_STORE_ID) vs anyLong() ?
-        given(reviewRepository.save(any(Review.class))).willReturn(TEST_REVIEW);
+        storeRepository.save(TEST_STORE);
+        userRepository.save(TEST_USER);
+        reviewRepository.save(TEST_REVIEW);
 
         // when
-        when(TEST_REVIEW.getUser()).thenReturn(TEST_USER);
-        ReviewResponseDto result = reviewService.updateReview(TEST_STORE_ID, TEST_REVIEW_ID, TEST_REVIEW_REQUEST_DTO, user);
+        ReviewResponseDto result = reviewService.updateReview(1L, TEST_REVIEW_ID, TEST_REVIEW_REQUEST_DTO, TEST_USER);
 
         // then
-        assertThat(result).usingRecursiveComparison().isEqualTo(TEST_REVIEW_RESPONSE_DTO);
+        assertThat(result)
+                .usingRecursiveComparison()
+                .ignoringFields("updateAt")
+                .isEqualTo(TEST_REVIEW_RESPONSE_DTO);
     }
 }
