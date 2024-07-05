@@ -1,5 +1,6 @@
 package com.sparta.greeypeople.menu.dto.response;
 
+import com.sparta.greeypeople.menu.entity.Menu;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +11,13 @@ public class MenuResponseDto {
     private Long storeId;
     private String menuName;
     private int price;
+    private Long menuLikes;
 
-    public MenuResponseDto(Long storeId, String menuName, Integer price) {
-        this.storeId = storeId;
-        this.menuName = menuName;
-        this.price = price;
+    public MenuResponseDto(Menu menu) {
+        this.storeId = menu.getStore().getId();
+        this.menuName = menu.getMenuName();
+        this.price = menu.getPrice();
+        this.menuLikes = menu.getMenuLikes();
     }
 
 }

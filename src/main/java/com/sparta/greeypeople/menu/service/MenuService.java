@@ -25,8 +25,8 @@ public class MenuService {
         return menus.stream().map(AdminMenuResponseDto::new).collect(Collectors.toList());
     }
 
-    public Store findStore(Long storeId) {
-        return storeRepository.findById(storeId).orElseThrow(
+    public void findStore(Long storeId) {
+        storeRepository.findById(storeId).orElseThrow(
             () -> new DataNotFoundException("조회된 가게의 정보가 없습니다.")
         );
     }
