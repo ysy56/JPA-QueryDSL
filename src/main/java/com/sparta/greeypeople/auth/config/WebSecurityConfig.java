@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/login", "/users/signup", "/api/users/refresh", "/users/login/kakao/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/orders", "/stores").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
         );
 
